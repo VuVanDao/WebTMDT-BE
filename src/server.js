@@ -1,12 +1,8 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
-
 import express from "express";
-import { CONNECT_DB, GET_DB } from "./config/mongodb";
-
+import { CLOSE_DB, CONNECT_DB, GET_DB } from "./config/mongodb";
+import exitHook from "async-exit-hook";
+import "dotenv/config";
+import { env } from "./config/environment";
 const START_SERVER = () => {
   const app = express();
   app.get("/", async (req, res) => {
@@ -14,14 +10,12 @@ const START_SERVER = () => {
 
     res.send("vuvandao");
   });
-  const hostname = "localhost";
-  const port = 8017;
+
   //ket noi toi mongodb server https://www.youtube.com/watch?v=BYpHB5LnRCQ&list=PLP6tw4Zpj-RIMgUPYxhLBVCpaBs94D73V&index=9
 
-  app.listen(port, hostname, () => {
-    // eslint-disable-next-line no-console
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(
-      `Hello Trung Quan Dev, I am running at http://${hostname}:${port}`
+      `Hello VanDaoDev, I am running at http://${env.APP_HOST}:${env.APP_PORT}`
     );
   });
 };
@@ -39,14 +33,9 @@ const START_SERVER = () => {
   }
 })();
 
-// CONNECT_DB()
-//   .then(() => {
-//     console.log("connected to MongoDB server");
-//   })
-//   .then(() => {
-//     START_SERVER();
-//   })
-//   .catch((error) => {
-//     console.log("error", error);
-//     process.exit(0);
-//   });
+exitHook(async () => {
+  console.log("prepare to close sever and database");
+  await CLOSE_DB().then(() => {
+    console.log("close sever and database successfully");
+  });
+});

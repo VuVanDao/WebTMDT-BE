@@ -4,11 +4,11 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 //IWnF1VI5Lwmsm4H3
-const mongoDBUri =
-  "mongodb+srv://da028901:dao11082004@vandaoweb.0r31yct.mongodb.net/?retryWrites=true&w=majority&appName=VanDaoWeb";
-const databaseName = "VanDaoWebShop";
+const mongoDBUri = env.MONGODB_URI;
+const databaseName = env.DATABASE_NAME;
 
 import { MongoClient, ServerApiVersion } from "mongodb";
+import { env } from "./environment";
 
 //khoi tao doi tuong webShopDatabaseInstance ban dau la null (vi cung ta chua connect)
 let webShopDatabaseInstance = null;
@@ -38,4 +38,10 @@ export const GET_DB = () => {
     throw new Error("Must connect to database first");
   }
   return webShopDatabaseInstance;
+};
+
+//dong ken noi khi can
+export const CLOSE_DB = async () => {
+  //ket noi toi MongoDB Atlas voi URI da khai bao trong than cua clientInstance
+  await mongoClientInstance.close();
 };
