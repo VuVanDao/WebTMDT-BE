@@ -1,5 +1,20 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+export const OBJECT_ID_RULE = /^[0-9a-fA-F]{24}$/;
+export const OBJECT_ID_RULE_MESSAGE =
+  "Your string fails to match the Object Id pattern!";
+export const EMAIL_RULE = /^\S+@\S+\.\S+$/;
+export const EMAIL_RULE_MESSAGE = "Email is invalid. (example@vandaohehe.com)";
+export const PHONE_RULE = /^0[0-9]{9}$/;
+export const PHONE_RULE_MESSAGE = "Plz supply your phoneNumber";
+export const BOARD_INVITATION_STATUS = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  REJECTED: "REJECTED",
+  SHIPPING: "shipping",
+  CANCELLED: "cancelled",
+  DONE: "done",
+};
+export const PAYMENT_METHOD = {
+  CASH: "cash",
+  CREDIT_CARD: "CREDIT_CARD",
+  TRANSFER: "transfer",
+};

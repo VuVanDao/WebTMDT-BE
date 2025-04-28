@@ -3,15 +3,14 @@ import { CLOSE_DB, CONNECT_DB, GET_DB } from "./config/mongodb";
 import exitHook from "async-exit-hook";
 import "dotenv/config";
 import { env } from "./config/environment";
+import { APIs_V1 } from "./routes/v1";
 const START_SERVER = () => {
   const app = express();
-  app.get("/", async (req, res) => {
-    console.log(">>>", await GET_DB().listCollections().toArray());
 
-    res.send("vuvandao");
-  });
+  //enable req.body json data
+  app.use(express.json());
 
-  //ket noi toi mongodb server https://www.youtube.com/watch?v=BYpHB5LnRCQ&list=PLP6tw4Zpj-RIMgUPYxhLBVCpaBs94D73V&index=9
+  app.use("/v1", APIs_V1);
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(
