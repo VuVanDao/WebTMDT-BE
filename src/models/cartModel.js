@@ -27,3 +27,8 @@ const CART_COLLECTION_SCHEMA = Joi.object({
     .default([]),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+
+export const cartModel = {
+  CART_COLLECTION_NAME,
+  CART_COLLECTION_SCHEMA,
+};

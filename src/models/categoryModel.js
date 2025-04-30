@@ -8,3 +8,7 @@ const CATEGORY_COLLECTION_SCHEMA = Joi.object({
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+export const categoryModel = {
+  CATEGORY_COLLECTION_NAME,
+  CATEGORY_COLLECTION_SCHEMA,
+};

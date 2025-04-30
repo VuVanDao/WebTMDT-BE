@@ -16,3 +16,7 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+export const shopOwnerModel = {
+  SHOP_OWNER_COLLECTION_NAME,
+  SHOP_OWNER_COLLECTION_SCHEMA,
+};

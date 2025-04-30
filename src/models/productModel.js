@@ -35,3 +35,7 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+export const productModel = {
+  PRODUCT_COLLECTION_NAME,
+  PRODUCT_COLLECTION_SCHEMA,
+};
