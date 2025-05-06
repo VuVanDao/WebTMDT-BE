@@ -17,14 +17,14 @@ Router.use("/products", productRouters);
 Router.use("/users", userRouters);
 
 //shopAPI
-Router.use("/users", shopRouters);
+Router.use("/shops", shopRouters);
 
 //orderAPI
-Router.use("/users", orderRouters);
+Router.use("/orders", orderRouters);
 
 //categoryAPI
-Router.use("/users", categoryRouters);
+Router.use("/category", categoryRouters);
 
 //cartAPI
-Router.use("/users", cartRouters);
+Router.use("/carts", cartRouters);
 export const APIs_V1 = Router;

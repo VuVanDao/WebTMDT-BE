@@ -5,6 +5,9 @@ export const EMAIL_RULE = /^\S+@\S+\.\S+$/;
 export const EMAIL_RULE_MESSAGE = "Email is invalid. (example@vandaohehe.com)";
 export const PHONE_RULE = /^0[0-9]{9}$/;
 export const PHONE_RULE_MESSAGE = "Plz supply your phoneNumber";
+export const PASSWORD_RULE = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d\W]{8,256}$/;
+export const PASSWORD_RULE_MESSAGE =
+  "Password must include at least 1 letter, a number, and at least 8 characters.";
 export const BOARD_INVITATION_STATUS = {
   PENDING: "PENDING",
   ACCEPTED: "ACCEPTED",
@@ -18,3 +21,7 @@ export const PAYMENT_METHOD = {
   CREDIT_CARD: "CREDIT_CARD",
   TRANSFER: "transfer",
 };
+export const WHITELIST_DOMAINS = [
+  "http://localhost:5173",
+  "https://fe-deploy-tau.vercel.app",
+];

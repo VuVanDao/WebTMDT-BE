@@ -1,4 +1,6 @@
 import Joi from "joi";
+import { ObjectId } from "mongodb";
+import { GET_DB } from "~/config/mongodb";
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -15,7 +17,6 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   stock: Joi.number().required(),
   image: Joi.array().items(Joi.string()).default([]),
   shopId: Joi.string().required(),
-  categoryId: Joi.string().required(),
   ratingAverage: Joi.number().default(0),
   ratingAverageVoted: Joi.number().default(0),
   soldCount: Joi.number().required(),
@@ -31,11 +32,40 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
       commentAt: Joi.date().timestamp(),
     })
     .default([]),
-  categoryId: Joi.array().items(),
+  categoryId: Joi.array().items().default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+
+const validateBeforeCreate = async (data) => {
+  return await PRODUCT_COLLECTION_SCHEMA.validateAsync(data, {
+    abortEarly: false,
+  });
+};
+const createNew = async (data) => {
+  const result = await validateBeforeCreate(data);
+  try {
+    const createdNewProduct = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .insertOne(result);
+    return createdNewProduct;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const findOneById = async (id) => {
+  try {
+    const createdNewProduct = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) });
+    return createdNewProduct;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const productModel = {
   PRODUCT_COLLECTION_NAME,
   PRODUCT_COLLECTION_SCHEMA,
+  createNew,
+  findOneById,
 };

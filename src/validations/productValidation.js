@@ -9,7 +9,10 @@ const createNew = async (req, res, next) => {
     price: Joi.number().required(),
   });
   try {
-    await correctCondition.validateAsync(req.body, { abortEarly: false });
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
     next();
   } catch (error) {
     next(

@@ -1,10 +1,5 @@
 import Joi from "joi";
-import {
-  BOARD_INVITATION_STATUS,
-  OBJECT_ID_RULE,
-  OBJECT_ID_RULE_MESSAGE,
-  PAYMENT_METHOD,
-} from "~/utils/constants";
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/constants";
 const STATUS_ITEM = {
   BOUGHT: "bought",
   NOT_BUY: "not_buy",

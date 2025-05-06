@@ -1,4 +1,6 @@
 import Joi from "joi";
+import { ObjectId } from "mongodb";
+import { GET_DB } from "~/config/mongodb";
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -20,18 +22,91 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   password: Joi.string().required(),
   avatar: Joi.string().default(null),
   phoneNumber: Joi.string()
-    .required()
     .pattern(PHONE_RULE)
-    .message(PHONE_RULE_MESSAGE),
+    .message(PHONE_RULE_MESSAGE)
+    .default(""),
   role: Joi.string()
     .valid(...Object.values(USER_ROLES))
     .default(USER_ROLES.CUSTOMER),
-  address: Joi.array().items(Joi.string()).required(),
+  address: Joi.array().items(Joi.string()).default(""),
+  isActive: Joi.boolean().default(false),
+  isActivating: Joi.boolean().default(false),
   verifyToken: Joi.string(),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+const invalidUpdateFields = [
+  "_id",
+  "createdAt",
+  "email",
+  "username",
+  "createdAt",
+];
+const validateBeforeCreate = async (data) => {
+  return await USER_COLLECTION_SCHEMA.validateAsync(data, {
+    abortEarly: false,
+  });
+};
+const register = async (data) => {
+  try {
+    const validateData = await validateBeforeCreate(data);
+    const createdUser = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .insertOne(validateData);
+    return createdUser;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const findOneByID = async (userId) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(userId) });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const findOneByEmail = async (emailValue) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ email: emailValue });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const update = async (userId, updateData) => {
+  try {
+    Object.keys(updateData).forEach((fieldName) => {
+      if (invalidUpdateFields.includes(fieldName)) {
+        delete updateData[fieldName];
+      }
+    });
+    // console.log("updateData", updateData);
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $set: updateData },
+        { returnDocument: "after" }
+      );
+    // console.log("result", result);
+
+    return result || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const userModel = {
   USER_COLLECTION_NAME,
   USER_COLLECTION_SCHEMA,
+  findOneByID,
+  findOneByEmail,
+  register,
+  update,
 };
