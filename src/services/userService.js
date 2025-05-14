@@ -6,7 +6,6 @@ import { BrevoProvider } from "~/providers/brevoProvider";
 import { pickUser } from "~/utils/formatter";
 import { v4 as uuidv4 } from "uuid";
 import ApiError from "~/utils/ApiError";
-import { jwtProvider } from "~/providers/jwtProvider";
 
 const register = async (reqBody) => {
   try {
@@ -94,33 +93,11 @@ const login = async (reqBody) => {
       address: existsUser.address,
       phoneNumber: existsUser.phoneNumber,
       avatar: existsUser.avatar,
+      online: existsUser.online,
     };
-    //tao ra 2 loai token, access token, refresh token
-    const accessToken = await jwtProvider.generateToken(
-      userInfo,
-      env.ACCESS_TOKEN_SECRET_SIGNATURE,
-      // 5
-      env.ACCESS_TOKEN_LIFE
-    );
-    const refreshToken = await jwtProvider.generateToken(
-      userInfo,
-      env.REFRESH_TOKEN_SECRET_SIGNATURE,
-      // 15
-      env.REFRESH_TOKEN_LIFE
-    );
-    // res.cookie("accessToken", accessToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: "none",
-    //   maxAge: ms("14 days"), //thoi gian song cua cookie
-    // });
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: "none",
-    //   maxAge: ms("14 days"), //thoi gian song cua cookie
-    // });
-    return { accessToken, refreshToken, ...pickUser(existsUser) };
+
+    // return { accessToken, refreshToken, ...pickUser(existsUser) };
+    return { ...pickUser(existsUser) };
   } catch (error) {
     throw error;
   }

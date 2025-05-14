@@ -10,6 +10,7 @@ export const pickUser = (user) => {
     "avatar",
     "role",
     "isActive",
+    "online",
     // "createdAt",
     // "updatedAt",
   ]);

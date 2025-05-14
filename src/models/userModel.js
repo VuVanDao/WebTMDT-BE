@@ -20,18 +20,19 @@ const USER_COLLECTION_SCHEMA = Joi.object({
     .pattern(EMAIL_RULE)
     .message(EMAIL_RULE_MESSAGE),
   password: Joi.string().required(),
-  avatar: Joi.string().default(null),
+  avatar: Joi.string().default(""),
   phoneNumber: Joi.string()
     .pattern(PHONE_RULE)
     .message(PHONE_RULE_MESSAGE)
     .default(""),
   role: Joi.string()
     .valid(...Object.values(USER_ROLES))
-    .default(USER_ROLES.CUSTOMER),
+    .default(USER_ROLES.ADMIN),
   address: Joi.array().items(Joi.string()).default(""),
   isActive: Joi.boolean().default(false),
-  isActivating: Joi.boolean().default(false),
+  online: Joi.boolean().default(false),
   verifyToken: Joi.string(),
+  cartItem: Joi.array().default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
