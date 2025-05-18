@@ -11,6 +11,7 @@ export const pickUser = (user) => {
     "role",
     "isActive",
     "online",
+    "phoneNumber",
     // "createdAt",
     // "updatedAt",
   ]);

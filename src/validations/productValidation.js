@@ -7,6 +7,8 @@ const createNew = async (req, res, next) => {
     name: Joi.string().required().trim().min(2).strict(),
     description: Joi.string().required().trim().min(3).strict(),
     price: Joi.number().required(),
+    categoryId: Joi.array().min(1).required(),
+    image: Joi.array().min(3).required(),
   });
   try {
     await correctCondition.validateAsync(req.body, {

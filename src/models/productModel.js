@@ -14,9 +14,15 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().trim().min(3).strict(),
   price: Joi.number().required(),
   discount: Joi.optional().default(null),
-  stock: Joi.number().required(),
-  image: Joi.array().items(Joi.string()).default([]),
+  quantity: Joi.number().required(),
+  image: Joi.array().items().default([]),
   shopId: Joi.string().required(),
+  sold: Joi.number().default(0),
+  color: Joi.array().items({
+    // = category ben FE
+    name: Joi.string().required(),
+    image: Joi.string().required(),
+  }),
   ratingAverage: Joi.number().default(0),
   ratingAverageVoted: Joi.number().default(0),
   soldCount: Joi.number().required(),
@@ -33,6 +39,7 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
     })
     .default([]),
   categoryId: Joi.array().items().default([]),
+  size: Joi.array().items().default([]), //danh reing cho quan ao
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });

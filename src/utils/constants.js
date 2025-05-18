@@ -21,6 +21,10 @@ export const PAYMENT_METHOD = {
   CREDIT_CARD: "CREDIT_CARD",
   TRANSFER: "transfer",
 };
+export const DELIVERY_TYPE = {
+  FAST: "Vận chuyển nhanh",
+  SUPER_FAST: "Hoả tốc",
+};
 export const WHITELIST_DOMAINS = [
   "http://localhost:5173",
   "https://fe-deploy-tau.vercel.app",

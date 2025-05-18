@@ -36,13 +36,7 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
-const invalidUpdateFields = [
-  "_id",
-  "createdAt",
-  "email",
-  "username",
-  "createdAt",
-];
+const invalidUpdateFields = ["_id"];
 const validateBeforeCreate = async (data) => {
   return await USER_COLLECTION_SCHEMA.validateAsync(data, {
     abortEarly: false,

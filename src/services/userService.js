@@ -86,15 +86,15 @@ const login = async (reqBody) => {
 
     // tao token tra ve phia fe
     //tao thong tin de dinh kem trong jwt: _id va email cua user
-    const userInfo = {
-      _id: existsUser._id,
-      email: existsUser.email,
-      role: existsUser.role,
-      address: existsUser.address,
-      phoneNumber: existsUser.phoneNumber,
-      avatar: existsUser.avatar,
-      online: existsUser.online,
-    };
+    // const userInfo = {
+    //   _id: existsUser._id,
+    //   email: existsUser.email,
+    //   role: existsUser.role,
+    //   address: existsUser.address,
+    //   phoneNumber: existsUser.phoneNumber,
+    //   avatar: existsUser.avatar,
+    //   online: existsUser.online,
+    // };
 
     // return { accessToken, refreshToken, ...pickUser(existsUser) };
     return { ...pickUser(existsUser) };
