@@ -27,5 +27,5 @@ export const DELIVERY_TYPE = {
 };
 export const WHITELIST_DOMAINS = [
   "http://localhost:5173",
-  "https://fe-deploy-tau.vercel.app",
+  "https://web-tmdt-fe.vercel.app",
 ];
