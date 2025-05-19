@@ -16,4 +16,10 @@ Router.route("/verify").put(
 Router.route("/login").post(userValidation.login, userController.login);
 Router.route("/logout").delete(userController.logout);
 
+//admin
+Router.route("/get_all_shop").get(
+  // userValidation.GetAllShop,
+  userController.GetAllShop
+);
+
 export const userRouters = Router;

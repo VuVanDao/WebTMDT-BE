@@ -6,6 +6,7 @@ import { BrevoProvider } from "~/providers/brevoProvider";
 import { pickUser } from "~/utils/formatter";
 import { v4 as uuidv4 } from "uuid";
 import ApiError from "~/utils/ApiError";
+import { shopModel } from "~/models/shopModel";
 
 const register = async (reqBody) => {
   try {
@@ -102,8 +103,17 @@ const login = async (reqBody) => {
     throw error;
   }
 };
+const GetAllShop = async () => {
+  try {
+    const allShop = await shopModel.GetAllShop();
+    return allShop ? allShop : [];
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
   verifyAccount,
+  GetAllShop,
 };

@@ -16,7 +16,6 @@ export const register = async (req, res, next) => {
       .required()
       .pattern(EMAIL_RULE)
       .message(EMAIL_RULE_MESSAGE),
-    logo: Joi.string().required(),
     phoneNumber: Joi.string().pattern(PHONE_RULE).message(PHONE_RULE_MESSAGE),
     address: Joi.string().required(),
   });

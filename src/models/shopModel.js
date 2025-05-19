@@ -53,8 +53,31 @@ const register = async (data) => {
     throw new Error(error);
   }
 };
+const GetAllShop = async () => {
+  try {
+    const queryCondition = [
+      {
+        status: false,
+      },
+    ];
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {
+            $and: queryCondition,
+          },
+        },
+      ])
+      .toArray();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
   register,
+  GetAllShop,
 };

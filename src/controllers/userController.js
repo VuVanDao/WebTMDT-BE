@@ -66,9 +66,18 @@ const logout = async (req, res, next) => {
     next(error);
   }
 };
+const GetAllShop = async (req, res, next) => {
+  try {
+    const allShop = await userServices.GetAllShop();
+    res.status(StatusCodes.CREATED).json(allShop);
+  } catch (error) {
+    next(error);
+  }
+};
 export const userController = {
   login,
   register,
   verifyAccount,
   logout,
+  GetAllShop,
 };
