@@ -18,6 +18,7 @@ const sendEmail = async (recipientEmail, customSubject, htmlContent) => {
   sendSmtpEmail.subject = customSubject;
   //noi dung
   sendSmtpEmail.htmlContent = htmlContent;
+  console.log("🚀 ~ sendEmail ~ sendSmtpEmail:", sendSmtpEmail);
 
   return apiInstance.sendTransacEmail(sendSmtpEmail);
 };

@@ -43,7 +43,6 @@ const registerLogo = async (logoFile, id) => {
     let logoShop = {};
     if (uploadResult) {
       const getOwnerShop = await shopModel.getDetailShopByOwnerId(id);
-      // console.log("🚀 ~ registerLogo ~ getOwnerShop:", getOwnerShop);
       if (getOwnerShop) {
         logoShop = await shopModel.registerLogo(
           {

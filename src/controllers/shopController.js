@@ -33,8 +33,6 @@ const getDetailShop = async (req, res, next) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Missing parameter (id)" });
     }
-    console.log("🚀 ~ getDetailShop ~ shopId:", shopId);
-
     const detailShop = await shopService.getDetailShop(shopId);
     if (!detailShop) {
       res.status(StatusCodes.NOT_FOUND).json({ message: "Not found" });

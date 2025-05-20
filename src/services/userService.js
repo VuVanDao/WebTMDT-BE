@@ -7,6 +7,7 @@ import { pickUser } from "~/utils/formatter";
 import { v4 as uuidv4 } from "uuid";
 import ApiError from "~/utils/ApiError";
 import { shopModel } from "~/models/shopModel";
+import { nodemailerProvider } from "~/providers/nodemailerProvider";
 
 const register = async (reqBody) => {
   try {
@@ -31,7 +32,9 @@ const register = async (reqBody) => {
     <h3>${verificationLink}</h3> 
     <h3>From Admin: Van Dao</h3>
     `;
-    await BrevoProvider.sendEmail(getUser.email, customSubject, htmlContent);
+
+    // await BrevoProvider.sendEmail(getUser.email, customSubject, htmlContent);
+    nodemailerProvider.sendEmail(getUser.email, getUser.verifyToken);
 
     return pickUser(getUser);
   } catch (error) {

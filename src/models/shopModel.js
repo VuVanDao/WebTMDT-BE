@@ -60,10 +60,9 @@ const registerLogo = async (logoFile, id) => {
         { $set: logoFile },
         { returnDocument: "after" }
       );
-
     return logoShop;
   } catch (error) {
-    // throw new Error(error);
+    throw new Error(error);
   }
 };
 const GetAllShop = async () => {
@@ -101,14 +100,12 @@ const getDetailShop = async (id) => {
   }
 };
 const getDetailShopByOwnerId = async (id) => {
-  console.log("🚀 ~ getDetailShopByOwnerId ~ id:", id);
   try {
     const result = await GET_DB()
       .collection(SHOP_OWNER_COLLECTION_NAME)
       .findOne({
         ownerId: new ObjectId(id),
       });
-    console.log("🚀 ~ getDetailShopByOwnerId ~ result:", result);
     return result;
   } catch (error) {
     throw new Error(error);
