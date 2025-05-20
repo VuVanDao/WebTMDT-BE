@@ -2,17 +2,50 @@ import { StatusCodes } from "http-status-codes";
 import { shopService } from "~/services/shopService";
 
 const register = async (req, res, next) => {
-  // console.log("🚀 ~ register ~ req:", req);
   try {
     const registeredShop = await shopService.register(req.body);
-    res.status(StatusCodes.CREATED).json(registeredShop);
+    res.status(StatusCodes.OK).json(registeredShop);
+  } catch (error) {
+    next(error);
+  }
+};
+const registerLogo = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const logoFile = req.file;
+    if (!id || !logoFile) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter" });
+    }
+    // console.log("🚀 ~ registerLogo ~ logoFile:", logoFile);
+    const registeredShopLogo = await shopService.registerLogo(logoFile, id);
+    res.status(StatusCodes.OK).json(registeredShopLogo);
+  } catch (error) {
+    next(error);
+  }
+};
+const getDetailShop = async (req, res, next) => {
+  try {
+    const shopId = req.params.id;
+    if (!shopId) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter (id)" });
+    }
+    console.log("🚀 ~ getDetailShop ~ shopId:", shopId);
+
+    const detailShop = await shopService.getDetailShop(shopId);
+    if (!detailShop) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Not found" });
+    }
+    res.status(StatusCodes.OK).json(detailShop);
   } catch (error) {
     next(error);
   }
 };
 export const shopController = {
-  //   login,
   register,
-  //   verifyAccount,
-  //   logout,
+  getDetailShop,
+  registerLogo,
 };

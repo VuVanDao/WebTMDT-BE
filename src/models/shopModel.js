@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
 import {
   DELIVERY_TYPE,
@@ -12,16 +13,13 @@ import {
 const SHOP_OWNER_COLLECTION_NAME = "shop";
 const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   name: Joi.string().required().trim().min(2).strict(),
-  // description: Joi.string().required().trim().strict(),
+  description: Joi.string().required().trim().strict(),
   email: Joi.string()
     .required()
     .pattern(EMAIL_RULE)
     .message(EMAIL_RULE_MESSAGE),
   logo: Joi.string().required(),
-  ownerId: Joi.string()
-    .pattern(OBJECT_ID_RULE)
-    .message(OBJECT_ID_RULE_MESSAGE)
-    .required(),
+  ownerId: Joi.required(),
   phoneNumber: Joi.string()
     .pattern(PHONE_RULE)
     .message(PHONE_RULE_MESSAGE)
@@ -53,6 +51,21 @@ const register = async (data) => {
     throw new Error(error);
   }
 };
+const registerLogo = async (logoFile, id) => {
+  try {
+    const logoShop = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: logoFile },
+        { returnDocument: "after" }
+      );
+
+    return logoShop;
+  } catch (error) {
+    // throw new Error(error);
+  }
+};
 const GetAllShop = async () => {
   try {
     const queryCondition = [
@@ -75,9 +88,38 @@ const GetAllShop = async () => {
     throw new Error(error);
   }
 };
+const getDetailShop = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .findOne({
+        _id: new ObjectId(id),
+      });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getDetailShopByOwnerId = async (id) => {
+  console.log("🚀 ~ getDetailShopByOwnerId ~ id:", id);
+  try {
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .findOne({
+        ownerId: new ObjectId(id),
+      });
+    console.log("🚀 ~ getDetailShopByOwnerId ~ result:", result);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
   register,
   GetAllShop,
+  getDetailShop,
+  registerLogo,
+  getDetailShopByOwnerId,
 };

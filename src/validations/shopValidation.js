@@ -31,8 +31,16 @@ export const register = async (req, res, next) => {
     );
   }
 };
+export const getDetailShop = async (req, res, next) => {
+  try {
+    next();
+  } catch (error) {
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
+  }
+};
 export const shopValidation = {
-  //   login,
   register,
-  //   verifyAccount,
+  getDetailShop,
 };
