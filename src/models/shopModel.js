@@ -10,6 +10,7 @@ import {
   PHONE_RULE,
   PHONE_RULE_MESSAGE,
 } from "~/utils/constants";
+import { userModel } from "./userModel";
 const SHOP_OWNER_COLLECTION_NAME = "shop";
 const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   name: Joi.string().required().trim().min(2).strict(),
@@ -80,6 +81,24 @@ const GetAllShop = async () => {
             $and: queryCondition,
           },
         },
+        {
+          $lookup: {
+            from: userModel.USER_COLLECTION_NAME,
+            localField: "ownerId",
+            foreignField: "_id",
+            as: "Owner",
+            pipeline: [
+              {
+                $project: {
+                  password: 0,
+                  verifyToken: 0,
+                  createdAt: 0,
+                  updatedAt: 0,
+                },
+              },
+            ],
+          },
+        },
       ])
       .toArray();
     return result;
@@ -111,6 +130,20 @@ const getDetailShopByOwnerId = async (id) => {
     throw new Error(error);
   }
 };
+const browseShop = async (shopId, dataSelection) => {
+  try {
+    const logoShop = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(shopId) },
+        { $set: dataSelection },
+        { returnDocument: "after" }
+      );
+    return logoShop;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
@@ -119,4 +152,5 @@ export const shopModel = {
   getDetailShop,
   registerLogo,
   getDetailShopByOwnerId,
+  browseShop,
 };

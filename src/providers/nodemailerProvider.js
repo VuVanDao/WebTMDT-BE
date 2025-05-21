@@ -33,8 +33,6 @@ const sendEmail = (receiverEmail, verifyToken) => {
     <h3>From Admin: Van Dao</h3>
     `,
   };
-  console.log("10");
-
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       return console.error("Gửi thất bại:", err);

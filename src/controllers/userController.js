@@ -5,10 +5,7 @@ import { userServices } from "~/services/userService";
 import ms from "ms";
 const register = async (req, res, next) => {
   try {
-    // console.log("reqBody", req.body);
-
     const createdUser = await userServices.register(req.body);
-
     res.status(StatusCodes.CREATED).json(createdUser);
   } catch (error) {
     next(error);

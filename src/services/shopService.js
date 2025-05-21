@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { shopModel } from "~/models/shopModel";
+import { userModel } from "~/models/userModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 
 const register = async (reqBody) => {
@@ -65,9 +66,24 @@ const getDetailShop = async (id) => {
     throw error;
   }
 };
+const browseShop = async (shopId, selection) => {
+  try {
+    const dataSelection = {
+      status: selection === "accept" ? true : false,
+    };
+    const shopBrowsed = await shopModel.browseShop(shopId, dataSelection);
+    if (shopBrowsed) {
+      await userModel.update(shopBrowsed?.ownerId, { role: "shop_owner" });
+    }
+    return shopBrowsed;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const shopService = {
   register,
   getDetailShop,
   registerLogo,
+  browseShop,
 };

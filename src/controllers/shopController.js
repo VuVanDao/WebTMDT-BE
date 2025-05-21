@@ -42,8 +42,27 @@ const getDetailShop = async (req, res, next) => {
     next(error);
   }
 };
+const browseShop = async (req, res, next) => {
+  try {
+    const shopId = req.body.shopId;
+    const selection = req.body.selection;
+    if (!shopId || !selection) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter " });
+    }
+    const shopBrowsed = await shopService.browseShop(shopId, selection);
+    if (!shopBrowsed) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Not found" });
+    }
+    res.status(StatusCodes.OK).json(shopBrowsed);
+  } catch (error) {
+    next(error);
+  }
+};
 export const shopController = {
   register,
   getDetailShop,
   registerLogo,
+  browseShop,
 };

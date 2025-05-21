@@ -13,7 +13,7 @@ const register = async (reqBody) => {
   try {
     const existsUser = await userModel.findOneByEmail(reqBody.email);
     if (existsUser) {
-      throw new Error(StatusCodes.CONFLICT, "Email is already exists");
+      throw new ApiError(StatusCodes.CONFLICT, "Email is already exists");
     }
     const nameFromEmail = reqBody.email.split("@")[0];
     const newUser = {
