@@ -71,6 +71,7 @@ const verifyAccount = async (reqBody) => {
 
 const login = async (reqBody) => {
   try {
+    let result = {};
     const existsUser = await userModel.findOneByEmail(reqBody.email);
     if (!existsUser) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Your account is not exist");
@@ -87,7 +88,17 @@ const login = async (reqBody) => {
         "Your account is not active"
       );
     }
-
+    let shopUserOwner = {};
+    // if (existsUser?.online === true) {
+    //   throw new ApiError(
+    //     StatusCodes.NOT_ACCEPTABLE,
+    //     "Tài khoản hiện đang hoạt động ở 1 nơi khác, vui lòng thử lại"
+    //   );
+    // }
+    if (existsUser?.role === "shop_owner") {
+      shopUserOwner = await shopModel.getDetailShopByOwnerId(existsUser?._id);
+    }
+    await userModel.update(existsUser?._id, { online: true });
     // tao token tra ve phia fe
     //tao thong tin de dinh kem trong jwt: _id va email cua user
     // const userInfo = {
@@ -101,11 +112,14 @@ const login = async (reqBody) => {
     // };
 
     // return { accessToken, refreshToken, ...pickUser(existsUser) };
-    return { ...pickUser(existsUser) };
+
+    result = { ...pickUser(existsUser), shopId: shopUserOwner._id };
+    return result;
   } catch (error) {
     throw error;
   }
 };
+
 const GetAllShop = async () => {
   try {
     const allShop = await shopModel.GetAllShop();

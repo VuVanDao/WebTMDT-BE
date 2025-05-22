@@ -10,22 +10,24 @@ import {
 
 const PRODUCT_COLLECTION_NAME = "products";
 const PRODUCT_COLLECTION_SCHEMA = Joi.object({
-  name: Joi.string().required().trim().min(2).strict(),
-  description: Joi.string().required().trim().min(3).strict(),
-  price: Joi.number().required(),
+  name: Joi.string().required().trim().min(2),
+  description: Joi.string().required().trim().min(3),
+  price: Joi.string().required(),
   discount: Joi.optional().default(null),
-  quantity: Joi.number().required(),
+  quantity: Joi.string().required(),
   image: Joi.array().items().default([]),
-  shopId: Joi.string().required(),
+  shopId: Joi.required(),
   sold: Joi.number().default(0),
-  color: Joi.array().items({
-    // = category ben FE
-    name: Joi.string().required(),
-    image: Joi.string().required(),
-  }),
+  color: Joi.array()
+    .items({
+      // = category ben FE
+      name: Joi.string().required(),
+      image: Joi.string().required(),
+    })
+    .default([]),
   ratingAverage: Joi.number().default(0),
   ratingAverageVoted: Joi.number().default(0),
-  soldCount: Joi.number().required(),
+  soldCount: Joi.number(),
   comments: Joi.array()
     .items({
       userId: Joi.string()
@@ -49,6 +51,7 @@ const validateBeforeCreate = async (data) => {
     abortEarly: false,
   });
 };
+
 const createNew = async (data) => {
   const result = await validateBeforeCreate(data);
   try {
@@ -60,6 +63,7 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
+
 const findOneById = async (id) => {
   try {
     const createdNewProduct = await GET_DB()
@@ -70,9 +74,49 @@ const findOneById = async (id) => {
     throw new Error(error);
   }
 };
+
+const addImage = async (imageFile, id) => {
+  try {
+    const logoShop = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $push: { image: imageFile } },
+        { returnDocument: "after" }
+      );
+    return logoShop;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const GetAllProduct = async (id) => {
+  try {
+    const queryCondition = [
+      {
+        shopId: new ObjectId(id),
+      },
+    ];
+    const result = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {
+            $and: queryCondition,
+          },
+        },
+      ])
+      .toArray();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const productModel = {
   PRODUCT_COLLECTION_NAME,
   PRODUCT_COLLECTION_SCHEMA,
   createNew,
   findOneById,
+  addImage,
+  GetAllProduct,
 };
