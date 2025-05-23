@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import ApiError from "~/utils/ApiError";
 import { shopModel } from "~/models/shopModel";
 import { nodemailerProvider } from "~/providers/nodemailerProvider";
+import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 
 const register = async (reqBody) => {
   try {
@@ -128,9 +129,61 @@ const GetAllShop = async () => {
     throw error;
   }
 };
+
+const update = async (userId, reqBody, userAvatarFile) => {
+  try {
+    const existsUser = await userModel.findOneByID(userId);
+    if (!existsUser) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Your account is not exist");
+    }
+    if (!existsUser.isActive) {
+      throw new ApiError(
+        StatusCodes.NOT_ACCEPTABLE,
+        "Your account is not active"
+      );
+    }
+    let updatedUser = {};
+    //th1:change password
+    if (reqBody.current_password && reqBody.new_password) {
+      if (
+        !bcryptjs.compareSync(reqBody.current_password, existsUser?.password)
+      ) {
+        throw new ApiError(
+          StatusCodes.NOT_ACCEPTABLE,
+          "Your email or password is incorrect"
+        );
+      }
+      updatedUser = await userModel.update(userId, {
+        password: bcryptjs.hashSync(reqBody.new_password, 8),
+      });
+    } else if (userAvatarFile) {
+      //th2:change avatar, upload file len cloudinary
+      const uploadResult = await cloudinaryProvider.streamUpload(
+        userAvatarFile.buffer,
+        "users"
+      );
+      updatedUser = await userModel.update(userId, {
+        avatar: uploadResult.secure_url,
+      });
+    } else {
+      //th3:change other fields
+      updatedUser = await userModel.update(userId, reqBody);
+    }
+    let res = "";
+    if (updatedUser?.role === "shop_owner") {
+      res = await shopModel.getDetailShopByOwnerId(updatedUser?._id);
+    }
+    let result = { ...pickUser(updatedUser), shopId: res._id };
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const userServices = {
   login,
   register,
   verifyAccount,
   GetAllShop,
+  update,
 };

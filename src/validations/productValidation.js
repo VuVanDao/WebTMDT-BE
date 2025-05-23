@@ -8,7 +8,7 @@ const createNew = async (req, res, next) => {
     description: Joi.string().required().trim().min(3),
     price: Joi.string().required(),
     quantity: Joi.string().required(),
-    categoryId: Joi.array().min(1).required(),
+    tagsId: Joi.array().min(1).required(),
     shopId: Joi.string().required(),
   });
   try {

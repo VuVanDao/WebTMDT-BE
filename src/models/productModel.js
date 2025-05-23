@@ -18,13 +18,13 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   image: Joi.array().items().default([]),
   shopId: Joi.required(),
   sold: Joi.number().default(0),
-  color: Joi.array()
-    .items({
-      // = category ben FE
-      name: Joi.string().required(),
-      image: Joi.string().required(),
-    })
-    .default([]),
+  // color: Joi.array()
+  //   .items({
+  //     // = category ben FE
+  //     name: Joi.string().required(),
+  //     image: Joi.string().required(),
+  //   })
+  //   .default([]),
   ratingAverage: Joi.number().default(0),
   ratingAverageVoted: Joi.number().default(0),
   soldCount: Joi.number(),
@@ -41,6 +41,7 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
     })
     .default([]),
   categoryId: Joi.array().items().default([]),
+  tagsId: Joi.array().items().default([]),
   size: Joi.array().items().default([]), //danh reing cho quan ao
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),

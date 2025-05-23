@@ -71,10 +71,22 @@ const GetAllShop = async (req, res, next) => {
     next(error);
   }
 };
+
+const update = async (req, res, next) => {
+  try {
+    const userId = req.jwtDecoded._id;
+    const userAvatarFile = req.file;
+    const result = await userServices.update(userId, req.body, userAvatarFile);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const userController = {
   login,
   register,
   verifyAccount,
   logout,
   GetAllShop,
+  update,
 };

@@ -90,9 +90,32 @@ const GetAllShop = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    username: Joi.string().trim(),
+    current_password: Joi.string()
+      .pattern(PASSWORD_RULE)
+      .message(`current_password: ${PASSWORD_RULE_MESSAGE}`),
+    new_password: Joi.string()
+      .pattern(PASSWORD_RULE)
+      .message(`new_password: ${PASSWORD_RULE_MESSAGE}`),
+  });
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+    next();
+  } catch (error) {
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
+  }
+};
 export const userValidation = {
   login,
   register,
   verifyAccount,
   GetAllShop,
+  update,
 };
