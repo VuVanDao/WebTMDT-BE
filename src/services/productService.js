@@ -1,6 +1,8 @@
+import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { productModel } from "~/models/productModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
+import ApiError from "~/utils/ApiError";
 
 const createNew = async (reqBody, shopId) => {
   try {
@@ -52,8 +54,53 @@ const GetAllProduct = async (id) => {
     throw error;
   }
 };
+
+const update = async (productId, reqBody, productImage) => {
+  try {
+    const existsProduct = await productModel.findOneById(productId);
+    if (!existsProduct) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Your product is not exist");
+    }
+
+    let updatedProduct = {};
+    //th1:change name
+    if (reqBody.name) {
+      updatedProduct = await productModel.update(productId, {
+        name: reqBody.name,
+      });
+    } else if (productImage) {
+      //th2:change avatar, upload file len cloudinary
+      const uploadResult = await cloudinaryProvider.streamUpload(
+        productImage.buffer,
+        "imageProduct"
+      );
+      updatedProduct = await productImage.addImage(
+        productId,
+        uploadResult.secure_url
+      );
+    } else {
+      //th3:change other fields
+      updatedProduct = await productModel.update(productId, reqBody);
+    }
+
+    return updatedProduct;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getProductById = async (id) => {
+  try {
+    let detailProduct = await productModel.findOneById(id);
+    return detailProduct;
+  } catch (error) {
+    throw error;
+  }
+};
 export const productService = {
   createNew,
   addImage,
   GetAllProduct,
+  update,
+  getProductById,
 };

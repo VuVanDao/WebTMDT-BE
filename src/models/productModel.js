@@ -18,13 +18,6 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   image: Joi.array().items().default([]),
   shopId: Joi.required(),
   sold: Joi.number().default(0),
-  // color: Joi.array()
-  //   .items({
-  //     // = category ben FE
-  //     name: Joi.string().required(),
-  //     image: Joi.string().required(),
-  //   })
-  //   .default([]),
   ratingAverage: Joi.number().default(0),
   ratingAverageVoted: Joi.number().default(0),
   soldCount: Joi.number(),
@@ -40,7 +33,13 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
       commentAt: Joi.date().timestamp(),
     })
     .default([]),
-  categoryId: Joi.array().items().default([]),
+  categoryId: Joi.array()
+    .items({
+      id: Joi.string(),
+      name: Joi.string(),
+      image: Joi.string(),
+    })
+    .default([]),
   tagsId: Joi.array().items().default([]),
   size: Joi.array().items().default([]), //danh reing cho quan ao
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
@@ -113,6 +112,24 @@ const GetAllProduct = async (id) => {
     throw new Error(error);
   }
 };
+
+const update = async (productId, updateData) => {
+  try {
+    const result = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(productId) },
+        { $set: updateData },
+        { returnDocument: "after" }
+      );
+    // console.log("result", result);
+
+    return result || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const productModel = {
   PRODUCT_COLLECTION_NAME,
   PRODUCT_COLLECTION_SCHEMA,
@@ -120,4 +137,5 @@ export const productModel = {
   findOneById,
   addImage,
   GetAllProduct,
+  update,
 };

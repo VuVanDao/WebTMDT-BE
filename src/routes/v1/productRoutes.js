@@ -1,5 +1,6 @@
 import express from "express";
 import { productController } from "~/controllers/productController";
+import { authMiddleware } from "~/middlewares/authMiddlware";
 import { multerMiddleware } from "~/middlewares/multerMiddleware";
 import { productValidation } from "~/validations/productValidation";
 const Router = express.Router();
@@ -12,4 +13,13 @@ Router.route("/add_image/:id").put(
   productController.addImage
 );
 Router.route("/get_All_Product/:id").get(productController.GetAllProduct);
+Router.route("/get_Product_By_Id/:id").get(productController.getProductById);
+
+Router.route("/update").put(
+  authMiddleware.isAuthorized,
+  multerMiddleware.upload.single("imageProduct"),
+  productValidation.update,
+  productController.update
+);
+
 export const productRouters = Router;

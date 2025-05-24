@@ -23,6 +23,24 @@ const createNew = async (req, res, next) => {
     );
   }
 };
+const update = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    name: Joi.string().trim(),
+    price: Joi.string().trim(),
+  });
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+    next();
+  } catch (error) {
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
+  }
+};
 export const productValidation = {
   createNew,
+  update,
 };
