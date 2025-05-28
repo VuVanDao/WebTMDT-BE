@@ -92,21 +92,35 @@ const addImage = async (imageFile, id) => {
 
 const GetAllProduct = async (id) => {
   try {
-    const queryCondition = [
-      {
-        shopId: new ObjectId(id),
-      },
-    ];
-    const result = await GET_DB()
-      .collection(PRODUCT_COLLECTION_NAME)
-      .aggregate([
+    let result = "";
+    if (id) {
+      const queryCondition = [
         {
-          $match: {
-            $and: queryCondition,
-          },
+          shopId: new ObjectId(id),
         },
-      ])
-      .toArray();
+      ];
+      result = await GET_DB()
+        .collection(PRODUCT_COLLECTION_NAME)
+        .aggregate([
+          {
+            $match: {
+              $and: queryCondition,
+            },
+          },
+        ])
+        .toArray();
+    } else {
+      const queryCondition = [
+        {
+          shopId: new ObjectId(id),
+        },
+      ];
+      result = await GET_DB()
+        .collection(PRODUCT_COLLECTION_NAME)
+        .aggregate([])
+        .toArray();
+    }
+
     return result;
   } catch (error) {
     throw new Error(error);

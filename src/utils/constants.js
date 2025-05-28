@@ -8,19 +8,19 @@ export const PHONE_RULE_MESSAGE = "Plz supply your phoneNumber";
 export const PASSWORD_RULE = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d\W]{8,256}$/;
 export const PASSWORD_RULE_MESSAGE =
   "Password must include at least 1 letter, a number, and at least 8 characters.";
-export const BOARD_INVITATION_STATUS = {
+export const ORDER_INVITATION_STATUS = {
   PENDING: "PENDING",
   ACCEPTED: "ACCEPTED",
   REJECTED: "REJECTED",
-  SHIPPING: "shipping",
-  CANCELLED: "cancelled",
-  DONE: "done",
+  SHIPPING: "SHIPPING",
+  CANCELLED: "CANCELLED",
+  DONE: "DONE",
 };
-export const PAYMENT_METHOD = {
-  CASH: "cash",
-  CREDIT_CARD: "CREDIT_CARD",
-  TRANSFER: "transfer",
-};
+// export const PAYMENT_METHOD = {
+//   CASH: "cash",
+//   CREDIT_CARD: "CREDIT_CARD",
+//   TRANSFER: "transfer",
+// };
 export const DELIVERY_TYPE = {
   FAST: "Vận chuyển nhanh",
   SUPER_FAST: "Hoả tốc",
@@ -31,3 +31,10 @@ export const WHITELIST_DOMAINS = [
 ];
 export const LIMIT_COMMON_FILE_SIZE = 10485760; // byte = 10 MB
 export const ALLOW_COMMON_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png"];
+
+export const SHOP_STATUS_STATE = {
+  true: true,
+  false: false,
+  accept: "accept",
+  denied: "denied",
+};

@@ -3,6 +3,21 @@ import { env } from "~/config/environment";
 import { jwtProvider } from "~/providers/jwtProvider";
 import { userServices } from "~/services/userService";
 import ms from "ms";
+
+const refreshToken = async (req, res, next) => {
+  try {
+    const result = await userServices.refreshToken(req.cookies?.refreshToken);
+    res.cookie("accessToken", result.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: ms("14 days"),
+    });
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(new ApiError(StatusCodes.FORBIDDEN, "Plz sign in first"));
+  }
+};
 const register = async (req, res, next) => {
   try {
     const createdUser = await userServices.register(req.body);
@@ -63,6 +78,7 @@ const logout = async (req, res, next) => {
     next(error);
   }
 };
+
 const GetAllShop = async (req, res, next) => {
   try {
     const allShop = await userServices.GetAllShop();
@@ -82,6 +98,15 @@ const update = async (req, res, next) => {
     next(error);
   }
 };
+
+const GetAllProduct = async (req, res, next) => {
+  try {
+    const allProductAvailable = await userServices.GetAllProduct();
+    res.status(StatusCodes.CREATED).json(allProductAvailable);
+  } catch (error) {
+    next(error);
+  }
+};
 export const userController = {
   login,
   register,
@@ -89,4 +114,6 @@ export const userController = {
   logout,
   GetAllShop,
   update,
+  refreshToken,
+  GetAllProduct,
 };

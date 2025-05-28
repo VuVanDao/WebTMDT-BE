@@ -1,40 +1,88 @@
 import Joi from "joi";
-import {
-  BOARD_INVITATION_STATUS,
-  OBJECT_ID_RULE,
-  OBJECT_ID_RULE_MESSAGE,
-  PAYMENT_METHOD,
-} from "~/utils/constants";
+import { GET_DB } from "~/config/mongodb";
+import { ORDER_INVITATION_STATUS } from "~/utils/constants";
+import { shopModel } from "./shopModel";
 
 const ORDER_COLLECTION_NAME = "order";
 const ORDER_COLLECTION_SCHEMA = Joi.object({
-  buyerId: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
-  description: Joi.string().required().trim().strict(),
-  totalPrice: Joi.number().required(),
+  customerId: Joi.string().required(),
+  name: Joi.string().required(),
+  category: Joi.string().required(),
+  quantity: Joi.number().required(),
+  price: Joi.number().required(),
+  size: Joi.optional().default(null),
+  shopId: Joi.required(),
   status: Joi.string()
-    .required()
-    .valid(...Object.values(BOARD_INVITATION_STATUS))
-    .default(BOARD_INVITATION_STATUS.PENDING),
-  paymentMethod: Joi.string()
-    .required()
-    .valid(...Object.values(PAYMENT_METHOD))
-    .default(PAYMENT_METHOD.CASH),
-  shippingAddress: Joi.string().required().trim().strict(),
-  shippingFee: Joi.number().optional(),
-  orderItems: Joi.array()
-    .items({
-      itemId: Joi.string()
-        .pattern(OBJECT_ID_RULE)
-        .message(OBJECT_ID_RULE_MESSAGE),
-      quantity: Joi.number(),
-      price: Joi.number(),
-      image: Joi.string(),
-    })
-    .required(),
+    .valid(...Object.values(ORDER_INVITATION_STATUS))
+    .default(ORDER_INVITATION_STATUS.PENDING),
+  customerInfo: Joi.object().required(),
+  textMessage: Joi.string().default(""),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
+const validateBeforeCreate = async (data) => {
+  return await ORDER_COLLECTION_SCHEMA.validateAsync(data, {
+    abortEarly: false,
+    allowUnknown: true,
+  });
+};
+const createNew = async (orderData) => {
+  const result = await validateBeforeCreate(orderData);
+  try {
+    const newOrder = await GET_DB()
+      .collection(ORDER_COLLECTION_NAME)
+      .insertOne(result);
+    return newOrder;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getAllOrder = async (statusOrder, customerId) => {
+  try {
+    const queryCondition = [
+      {
+        status: statusOrder,
+        customerId: customerId,
+      },
+    ];
+    const newOrder = await GET_DB()
+      .collection(ORDER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {
+            $and: queryCondition,
+          },
+        },
+        {
+          $lookup: {
+            from: shopModel.SHOP_OWNER_COLLECTION_NAME,
+            localField: "shopId",
+            foreignField: "_id",
+            as: "ShopInfo",
+            pipeline: [
+              {
+                $project: {
+                  ratingAverage: 0,
+                  ratingAverageVoted: 0,
+                  ownerId: 0,
+                  status: 0,
+                  createdAt: 0,
+                  updatedAt: 0,
+                },
+              },
+            ],
+          },
+        },
+      ])
+      .toArray();
+    return newOrder;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const orderModel = {
   ORDER_COLLECTION_NAME,
   ORDER_COLLECTION_SCHEMA,
+  createNew,
+  getAllOrder,
 };

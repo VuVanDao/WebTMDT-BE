@@ -69,7 +69,7 @@ const getDetailShop = async (id) => {
 const browseShop = async (shopId, selection) => {
   try {
     const dataSelection = {
-      status: selection === "accept" ? true : false,
+      status: selection === "accept" ? true : "denied",
     };
     const shopBrowsed = await shopModel.browseShop(shopId, dataSelection);
     if (shopBrowsed) {

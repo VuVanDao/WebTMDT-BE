@@ -5,7 +5,7 @@ import { userRouters } from "./userRoutes";
 import { shopRouters } from "./shopRoutes";
 import { orderRouters } from "./orderRoutes";
 import { categoryRouters } from "./categoryRoutes";
-import { cartRouters } from "./cartRoutes";
+import { notificationRoutes } from "./notificationRoutes";
 
 //server -> router -> middleware -> validation -> controllers -> services -> model
 const Router = express.Router();
@@ -26,5 +26,5 @@ Router.use("/orders", orderRouters);
 Router.use("/category", categoryRouters);
 
 //cartAPI
-Router.use("/carts", cartRouters);
+Router.use("/notifications", notificationRoutes);
 export const APIs_V1 = Router;

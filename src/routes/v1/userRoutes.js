@@ -5,6 +5,8 @@ import { multerMiddleware } from "~/middlewares/multerMiddleware";
 import { userValidation } from "~/validations/userValidation";
 
 const Router = express.Router();
+//token
+Router.route("/refresh_token").post(userController.refreshToken);
 
 Router.route("/register").post(
   userValidation.register,
@@ -24,6 +26,8 @@ Router.route("/update").put(
   userValidation.update,
   userController.update
 );
+
+Router.route("/get_All_Product").get(userController.GetAllProduct);
 
 //admin
 Router.route("/get_all_shop").get(userController.GetAllShop);

@@ -12,5 +12,5 @@ Router.route("/register_shop_logo/:id").post(
   multerMiddleware.upload.single("logo"),
   shopController.registerLogo
 );
-Router.route("/browseShop/").post(shopController.browseShop);
+Router.route("/browseShop").post(shopController.browseShop);
 export const shopRouters = Router;

@@ -9,6 +9,7 @@ import {
   OBJECT_ID_RULE_MESSAGE,
   PHONE_RULE,
   PHONE_RULE_MESSAGE,
+  SHOP_STATUS_STATE,
 } from "~/utils/constants";
 import { userModel } from "./userModel";
 const SHOP_OWNER_COLLECTION_NAME = "shop";
@@ -31,7 +32,7 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
     .required()
     .default(DELIVERY_TYPE.FAST),
   ratingAverage: Joi.number().default(0),
-  status: Joi.boolean().default(false),
+  status: Joi.valid(...Object.keys(SHOP_STATUS_STATE)).default(false),
   ratingAverageVoted: Joi.number().default(0),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
@@ -101,6 +102,7 @@ const GetAllShop = async () => {
         },
       ])
       .toArray();
+
     return result;
   } catch (error) {
     throw new Error(error);

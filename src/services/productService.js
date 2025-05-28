@@ -70,11 +70,19 @@ const update = async (productId, reqBody, productImage) => {
       });
     } else if (productImage) {
       //th2:change avatar, upload file len cloudinary
-      const uploadResult = await cloudinaryProvider.streamUpload(
-        productImage.buffer,
-        "imageProduct"
-      );
-      updatedProduct = await productImage.addImage(
+      productImage.map(async (item) => {
+        const uploadResult = await cloudinaryProvider.streamUpload(
+          item.buffer,
+          "imageProduct"
+        );
+        if (uploadResult) {
+          updatedProduct = await productModel.addImage(
+            productId,
+            uploadResult.secure_url
+          );
+        }
+      });
+      updatedProduct = await productModel.addImage(
         productId,
         uploadResult.secure_url
       );

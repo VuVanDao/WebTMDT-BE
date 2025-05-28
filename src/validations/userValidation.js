@@ -99,6 +99,7 @@ const update = async (req, res, next) => {
     new_password: Joi.string()
       .pattern(PASSWORD_RULE)
       .message(`new_password: ${PASSWORD_RULE_MESSAGE}`),
+    cartItem: Joi.array(),
   });
   try {
     await correctCondition.validateAsync(req.body, {

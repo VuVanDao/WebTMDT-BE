@@ -9,6 +9,39 @@ import ApiError from "~/utils/ApiError";
 import { shopModel } from "~/models/shopModel";
 import { nodemailerProvider } from "~/providers/nodemailerProvider";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
+import { jwtProvider } from "~/providers/jwtProvider";
+import { productModel } from "~/models/productModel";
+
+const refreshToken = async (clientRefreshToken) => {
+  try {
+    //giai ma refreshToken tu client
+    const refreshTokenDecoded = await jwtProvider.verifyToken(
+      clientRefreshToken,
+      env.REFRESH_TOKEN_SECRET_SIGNATURE
+    );
+    console.log(
+      "🚀 ~ refreshToken ~ refreshTokenDecoded:",
+      refreshTokenDecoded
+    );
+    // tao token tra ve phia fe
+    //tao thong tin de dinh kem trong jwt: _id va email cua user
+    const userInfo = {
+      _id: refreshTokenDecoded._id,
+      email: refreshTokenDecoded.email,
+    };
+    //tao ra refresh token
+    const accessToken = await jwtProvider.generateToken(
+      userInfo,
+      env.ACCESS_TOKEN_SECRET_SIGNATURE,
+      // 5
+      env.ACCESS_TOKEN_LIFE
+    );
+
+    return { accessToken };
+  } catch (error) {
+    throw error;
+  }
+};
 
 const register = async (reqBody) => {
   try {
@@ -180,10 +213,20 @@ const update = async (userId, reqBody, userAvatarFile) => {
   }
 };
 
+const GetAllProduct = async () => {
+  try {
+    const allProductAvailable = await productModel.GetAllProduct();
+    return allProductAvailable ? allProductAvailable : [];
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
   verifyAccount,
   GetAllShop,
   update,
+  refreshToken,
+  GetAllProduct,
 };
