@@ -102,7 +102,17 @@ const update = async (req, res, next) => {
 const GetAllProduct = async (req, res, next) => {
   try {
     const allProductAvailable = await userServices.GetAllProduct();
+
     res.status(StatusCodes.CREATED).json(allProductAvailable);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const GetAllAccount = async (req, res, next) => {
+  try {
+    const allAccountAvailable = await userServices.GetAllAccount();
+    res.status(StatusCodes.CREATED).json(allAccountAvailable);
   } catch (error) {
     next(error);
   }
@@ -116,4 +126,5 @@ export const userController = {
   update,
   refreshToken,
   GetAllProduct,
+  GetAllAccount,
 };

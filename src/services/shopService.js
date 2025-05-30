@@ -68,6 +68,9 @@ const getDetailShop = async (id) => {
 };
 const browseShop = async (shopId, selection) => {
   try {
+    if (selection === "denied") {
+      return null;
+    }
     const dataSelection = {
       status: selection === "accept" ? true : "denied",
     };

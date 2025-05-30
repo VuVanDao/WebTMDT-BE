@@ -97,6 +97,22 @@ const update = async (userId, updateData) => {
   }
 };
 
+const GetAllAccount = async () => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {},
+        },
+      ])
+      .toArray();
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const userModel = {
   USER_COLLECTION_NAME,
   USER_COLLECTION_SCHEMA,
@@ -104,4 +120,5 @@ export const userModel = {
   findOneByEmail,
   register,
   update,
+  GetAllAccount,
 };

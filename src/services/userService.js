@@ -221,6 +221,23 @@ const GetAllProduct = async () => {
     throw error;
   }
 };
+
+const GetAllAccount = async () => {
+  try {
+    const allAccountAvailable = await userModel.GetAllAccount();
+    return allAccountAvailable
+      ? allAccountAvailable.map((item) => {
+          delete item["password"];
+          delete item["verifyToken"];
+          delete item["online"];
+          delete item["cartItem"];
+          return item;
+        })
+      : [];
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
@@ -229,4 +246,5 @@ export const userServices = {
   update,
   refreshToken,
   GetAllProduct,
+  GetAllAccount,
 };
