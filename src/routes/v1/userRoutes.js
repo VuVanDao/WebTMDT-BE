@@ -12,6 +12,7 @@ Router.route("/register").post(
   userValidation.register,
   userController.register
 );
+Router.route("/").post(userValidation.createNew, userController.createNew);
 
 Router.route("/verify").put(
   userValidation.verifyAccount,

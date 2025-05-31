@@ -113,6 +113,16 @@ const GetAllAccount = async () => {
     throw new Error(error);
   }
 };
+const createNew = async (data) => {
+  try {
+    const createdUser = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .insertOne(data);
+    return createdUser;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const userModel = {
   USER_COLLECTION_NAME,
   USER_COLLECTION_SCHEMA,
@@ -121,4 +131,5 @@ export const userModel = {
   register,
   update,
   GetAllAccount,
+  createNew,
 };

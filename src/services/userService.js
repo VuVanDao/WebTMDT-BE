@@ -11,6 +11,7 @@ import { nodemailerProvider } from "~/providers/nodemailerProvider";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 import { jwtProvider } from "~/providers/jwtProvider";
 import { productModel } from "~/models/productModel";
+import { USER_ROLES } from "~/utils/constants";
 
 const refreshToken = async (clientRefreshToken) => {
   try {
@@ -238,6 +239,31 @@ const GetAllAccount = async () => {
     throw error;
   }
 };
+
+const createNew = async (reqBody) => {
+  try {
+    const existsUser = await userModel.findOneByEmail(reqBody.email);
+    if (existsUser) {
+      throw new ApiError(StatusCodes.CONFLICT, "Email is already exists");
+    }
+
+    const newUser = {
+      email: reqBody.email,
+      password: bcryptjs.hashSync(reqBody.password, 8),
+      username: reqBody.username,
+      address: reqBody.address,
+      phoneNumber: reqBody.phoneNumber,
+      role: USER_ROLES.CUSTOMER,
+      isActive: true,
+    };
+    const createdUser = await userModel.createNew(newUser);
+    const getUser = await userModel.findOneByID(createdUser.insertedId);
+
+    return pickUser(getUser);
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
@@ -247,4 +273,5 @@ export const userServices = {
   refreshToken,
   GetAllProduct,
   GetAllAccount,
+  createNew,
 };

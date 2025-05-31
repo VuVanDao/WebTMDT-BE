@@ -31,6 +31,30 @@ const register = async (req, res, next) => {
     );
   }
 };
+const createNew = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    email: Joi.string()
+      .required()
+      .pattern(EMAIL_RULE)
+      .message(EMAIL_RULE_MESSAGE),
+    username: Joi.string().required(),
+    password: Joi.string()
+      .required()
+      .pattern(PASSWORD_RULE)
+      .message(PASSWORD_RULE_MESSAGE),
+  });
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+    next();
+  } catch (error) {
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
+  }
+};
 
 const verifyAccount = async (req, res, next) => {
   const correctCondition = Joi.object({
@@ -119,4 +143,5 @@ export const userValidation = {
   verifyAccount,
   GetAllShop,
   update,
+  createNew,
 };

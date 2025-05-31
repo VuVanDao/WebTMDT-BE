@@ -38,3 +38,8 @@ export const SHOP_STATUS_STATE = {
   accept: "accept",
   denied: "denied",
 };
+export const USER_ROLES = {
+  CUSTOMER: "customer",
+  ADMIN: "admin",
+  SHOP_OWNER: "shop_owner",
+};

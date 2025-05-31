@@ -91,8 +91,13 @@ const GetAllShop = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const userId = req.jwtDecoded._id;
+    const idUpdate = req.body.idUpdate;
     const userAvatarFile = req.file;
-    const result = await userServices.update(userId, req.body, userAvatarFile);
+    const result = await userServices.update(
+      idUpdate ? idUpdate : userId,
+      req.body,
+      userAvatarFile
+    );
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     next(error);
@@ -117,6 +122,15 @@ const GetAllAccount = async (req, res, next) => {
     next(error);
   }
 };
+const createNew = async (req, res, next) => {
+  try {
+    const createdUser = await userServices.createNew(req.body);
+    res.status(StatusCodes.CREATED).json(createdUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const userController = {
   login,
   register,
@@ -127,4 +141,5 @@ export const userController = {
   refreshToken,
   GetAllProduct,
   GetAllAccount,
+  createNew,
 };
