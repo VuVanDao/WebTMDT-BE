@@ -91,7 +91,7 @@ const GetAllShop = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const userId = req.jwtDecoded._id;
-    const idUpdate = req.body.idUpdate;
+    const idUpdate = req.body?.idUpdate;
     const userAvatarFile = req.file;
     const result = await userServices.update(
       idUpdate ? idUpdate : userId,

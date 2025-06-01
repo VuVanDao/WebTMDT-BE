@@ -184,7 +184,7 @@ const update = async (userId, reqBody, userAvatarFile) => {
       ) {
         throw new ApiError(
           StatusCodes.NOT_ACCEPTABLE,
-          "Your email or password is incorrect"
+          "Vui lòng nhập chính xác mật khẩu cũ để đổi mới"
         );
       }
       updatedUser = await userModel.update(userId, {
