@@ -1,4 +1,5 @@
 import multer from "multer";
+import ApiError from "~/utils/ApiError";
 import {
   ALLOW_COMMON_FILE_TYPES,
   LIMIT_COMMON_FILE_SIZE,

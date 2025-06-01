@@ -30,7 +30,12 @@ export const WHITELIST_DOMAINS = [
   "https://web-tmdt-fe.vercel.app",
 ];
 export const LIMIT_COMMON_FILE_SIZE = 10485760; // byte = 10 MB
-export const ALLOW_COMMON_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png"];
+export const ALLOW_COMMON_FILE_TYPES = [
+  "image/jpg",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+];
 
 export const SHOP_STATUS_STATE = {
   true: true,
