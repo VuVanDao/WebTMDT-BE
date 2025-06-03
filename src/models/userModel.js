@@ -7,6 +7,7 @@ import {
   PHONE_RULE,
   PHONE_RULE_MESSAGE,
 } from "~/utils/constants";
+import { PRODUCT_COLLECTION_NAME, productModel } from "./productModel";
 const USER_ROLES = {
   CUSTOMER: "customer",
   ADMIN: "admin",
@@ -123,6 +124,51 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
+
+const search = async (queryFilter) => {
+  try {
+    const queryCondition = [];
+    //xu ly query cho tung truong hop
+    if (queryFilter) {
+      console.log(Object.keys(queryFilter));
+      Object.keys(queryFilter).forEach((key) => {
+        //ko phan biet chu hoa chu thuong
+        queryCondition.push({
+          [key]: { $regex: new RegExp(queryFilter[key], "i") },
+        });
+      });
+    }
+    const query = await GET_DB()
+      .collection(productModel.PRODUCT_COLLECTION_NAME)
+      .aggregate(
+        [
+          {
+            $match: {
+              $and: queryCondition,
+            },
+          },
+          {
+            //sort theo title theo A-Z
+            $sort: {
+              title: 1,
+            },
+          },
+        ],
+        {
+          //colaation: dung de fix loi sort khong chinh xac
+          collation: {
+            locale: "en",
+          },
+        }
+      )
+      .toArray();
+    // console.log("🚀 ~ getBoards ~ query:", query[0]);
+    const res = query[0];
+    return res;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const userModel = {
   USER_COLLECTION_NAME,
   USER_COLLECTION_SCHEMA,
@@ -132,4 +178,5 @@ export const userModel = {
   update,
   GetAllAccount,
   createNew,
+  search,
 };

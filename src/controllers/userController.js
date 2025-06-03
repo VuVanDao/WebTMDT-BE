@@ -130,7 +130,16 @@ const createNew = async (req, res, next) => {
     next(error);
   }
 };
-
+const search = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    const queryFilter = q;
+    const result = await userServices.search(queryFilter);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const userController = {
   login,
   register,
@@ -142,4 +151,5 @@ export const userController = {
   GetAllProduct,
   GetAllAccount,
   createNew,
+  search,
 };

@@ -69,10 +69,22 @@ const getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+const searchProduct = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    const queryFilter = q;
+    const result = await productService.searchProduct(queryFilter);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const productController = {
   createNew,
   addImage,
   GetAllProduct,
   update,
   getProductById,
+  searchProduct,
 };

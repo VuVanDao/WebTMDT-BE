@@ -144,6 +144,80 @@ const update = async (productId, updateData) => {
   }
 };
 
+const searchProduct = async (queryFilter) => {
+  try {
+    const queryCondition = [];
+    //xu ly query cho tung truong hop
+    if (queryFilter) {
+      Object.keys(queryFilter).forEach((key) => {
+        //ko phan biet chu hoa chu thuong
+        queryCondition.push({
+          [key]: { $regex: new RegExp(queryFilter[key], "i") },
+        });
+      });
+    }
+    // const query = await GET_DB()
+    //   .collection(PRODUCT_COLLECTION_NAME)
+    //   .aggregate(
+    //     [
+    //       {
+    //         $match: {
+    //           $and: queryCondition,
+    //         },
+    //       },
+    //       {
+    //         //sort theo title theo A-Z
+    //         $sort: {
+    //           title: 1,
+    //         },
+    //       },
+    //     ],
+    //     {
+    //       //colaation: dung de fix loi sort khong chinh xac
+    //       collation: {
+    //         locale: "en",
+    //       },
+    //     }
+    //   )
+    //   .toArray();
+
+    //neu dung cach nay thi doi strict trong mongodb.js = false
+    const query = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .aggregate([
+        {
+          $search: {
+            index: "default",
+            text: {
+              query: queryFilter?.name,
+              path: ["name", "tagsId"],
+            },
+          },
+        },
+      ])
+      .toArray();
+    return query;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// const searchProduct = async (queryFilter) => {
+//   try {
+//     const searchConditions = {
+//       $or: [{ name: { $regex: queryFilter.name, $options: "i" } }],
+//     };
+//     const products = await GET_DB()
+//       .collection(PRODUCT_COLLECTION_NAME)
+//       .find(searchConditions)
+//       .sort({ createdAt: -1 }) // Sắp xếp theo thời gian tạo mới nhất
+//       .toArray();
+
+//     return products;
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// };
 export const productModel = {
   PRODUCT_COLLECTION_NAME,
   PRODUCT_COLLECTION_SCHEMA,
@@ -152,4 +226,5 @@ export const productModel = {
   addImage,
   GetAllProduct,
   update,
+  searchProduct,
 };

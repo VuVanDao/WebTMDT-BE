@@ -22,4 +22,5 @@ Router.route("/update").put(
   productController.update
 );
 
+Router.route("/").get(productController.searchProduct);
 export const productRouters = Router;

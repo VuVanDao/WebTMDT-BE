@@ -264,6 +264,15 @@ const createNew = async (reqBody) => {
     throw error;
   }
 };
+
+const search = async (queryFilter) => {
+  try {
+    const result = await userModel.search(queryFilter);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
@@ -274,4 +283,5 @@ export const userServices = {
   GetAllProduct,
   GetAllAccount,
   createNew,
+  search,
 };

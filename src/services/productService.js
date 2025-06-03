@@ -105,10 +105,20 @@ const getProductById = async (id) => {
     throw error;
   }
 };
+
+const searchProduct = async (queryFilter) => {
+  try {
+    const result = await productModel.searchProduct(queryFilter);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const productService = {
   createNew,
   addImage,
   GetAllProduct,
   update,
   getProductById,
+  searchProduct,
 };

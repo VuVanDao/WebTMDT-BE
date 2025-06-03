@@ -17,7 +17,7 @@ let webShopDatabaseInstance = null;
 const mongoClientInstance = new MongoClient(mongoDBUri, {
   serverApi: {
     version: ServerApiVersion.v1,
-    strict: true,
+    strict: false,
     deprecationErrors: true,
   },
 });
