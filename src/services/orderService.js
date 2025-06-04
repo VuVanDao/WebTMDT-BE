@@ -46,10 +46,19 @@ const update = async (data, orderId) => {
     throw error;
   }
 };
+const deleteOrder = async (orderId) => {
+  try {
+    const ordersResult = await orderModel.deleteOrder(orderId);
+    return ordersResult;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const orderService = {
   createNew,
   getAllOrder,
   getOrderByShopId,
   update,
+  deleteOrder,
 };

@@ -14,13 +14,16 @@ const getAllOrder = async (req, res, next) => {
   try {
     const statusOrder = req.query.statusOrder;
     const customerId = req.query.customerId;
-    if (!statusOrder || !customerId) {
+    if (!customerId) {
       res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Missing parameter" });
     }
 
-    const result = await orderService.getAllOrder(statusOrder, customerId);
+    const result = await orderService.getAllOrder(
+      statusOrder ? statusOrder : "All",
+      customerId
+    );
     res.status(StatusCodes.OK).json(result);
   } catch (error) {
     next(error);
@@ -52,9 +55,25 @@ const update = async (req, res, next) => {
     next(error);
   }
 };
+const deleteOrder = async (req, res, next) => {
+  try {
+    const orderId = req.query.orderId;
+    if (!orderId) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter" });
+    }
+
+    const result = await orderService.deleteOrder(orderId);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const orderController = {
   createNew,
   getAllOrder,
   getOrderByShopId,
   update,
+  deleteOrder,
 };

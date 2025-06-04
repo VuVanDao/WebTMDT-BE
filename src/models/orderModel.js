@@ -41,18 +41,109 @@ const createNew = async (orderData) => {
 };
 const getAllOrder = async (statusOrder, customerId) => {
   try {
+    if (statusOrder === "All") {
+      const queryCondition = [
+        {
+          customerId: customerId,
+        },
+      ];
+      const newOrder = await GET_DB()
+        .collection(ORDER_COLLECTION_NAME)
+        .aggregate([
+          {
+            $match: {
+              $and: queryCondition,
+            },
+          },
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+          {
+            $lookup: {
+              from: shopModel.SHOP_OWNER_COLLECTION_NAME,
+              localField: "shopId",
+              foreignField: "_id",
+              as: "ShopInfo",
+              pipeline: [
+                {
+                  $project: {
+                    ratingAverage: 0,
+                    ratingAverageVoted: 0,
+                    ownerId: 0,
+                    status: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                  },
+                },
+              ],
+            },
+          },
+        ])
+        .toArray();
+      return newOrder;
+    } else {
+      const queryCondition = [
+        {
+          status: statusOrder,
+          customerId: customerId,
+        },
+      ];
+      const newOrder = await GET_DB()
+        .collection(ORDER_COLLECTION_NAME)
+        .aggregate([
+          {
+            $match: {
+              $and: queryCondition,
+            },
+          },
+          {
+            $lookup: {
+              from: shopModel.SHOP_OWNER_COLLECTION_NAME,
+              localField: "shopId",
+              foreignField: "_id",
+              as: "ShopInfo",
+              pipeline: [
+                {
+                  $project: {
+                    ratingAverage: 0,
+                    ratingAverageVoted: 0,
+                    ownerId: 0,
+                    status: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                  },
+                },
+              ],
+            },
+          },
+        ])
+        .toArray();
+      return newOrder;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const getOrderByShopId = async (shopId) => {
+  try {
     const queryCondition = [
       {
-        status: statusOrder,
-        customerId: customerId,
+        shopId: new ObjectId(shopId),
       },
     ];
-    const newOrder = await GET_DB()
+    const listOrders = await GET_DB()
       .collection(ORDER_COLLECTION_NAME)
       .aggregate([
         {
           $match: {
             $and: queryCondition,
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
           },
         },
         {
@@ -77,36 +168,6 @@ const getAllOrder = async (statusOrder, customerId) => {
         },
       ])
       .toArray();
-    return newOrder;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-const getOrderByShopId = async (shopId) => {
-  try {
-    const queryCondition = [
-      {
-        shopId: new ObjectId(shopId),
-      },
-    ];
-    const listOrders = await GET_DB()
-      .collection(ORDER_COLLECTION_NAME)
-      .aggregate([
-        {
-          $match: {
-            $and: queryCondition,
-          },
-        },
-        {
-          $lookup: {
-            from: productModel.PRODUCT_COLLECTION_NAME,
-            localField: "productId",
-            foreignField: "_id",
-            as: "productInfo",
-          },
-        },
-      ])
-      .toArray();
     return listOrders;
   } catch (error) {
     throw new Error(error);
@@ -126,6 +187,16 @@ const update = async (data, orderId) => {
     throw new Error(error);
   }
 };
+const deleteOrder = async (orderId) => {
+  try {
+    const result = await GET_DB()
+      .collection(ORDER_COLLECTION_NAME)
+      .deleteOne({ _id: new ObjectId(orderId) });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const orderModel = {
   ORDER_COLLECTION_NAME,
   ORDER_COLLECTION_SCHEMA,
@@ -133,4 +204,5 @@ export const orderModel = {
   getAllOrder,
   getOrderByShopId,
   update,
+  deleteOrder,
 };
