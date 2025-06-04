@@ -1,12 +1,12 @@
 import Joi from "joi";
+import { GET_DB } from "~/config/mongodb";
 const STATUS_ITEM = {
   BOUGHT: "bought",
   NOT_BUY: "not_buy",
 };
 const NOTIFICATION_COLLECTION_NAME = "notification";
 const NOTIFICATION_COLLECTION_SCHEMA = Joi.object({
-  orderId: Joi.string().required(),
-  nameProductOfOrder: Joi.string().required(),
+  content: Joi.string().required(),
   createdAp: Joi.date().timestamp("javascript").default(null),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });

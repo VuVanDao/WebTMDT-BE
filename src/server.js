@@ -43,6 +43,12 @@ const START_SERVER = () => {
         dataToEmit
       );
     });
+    socket.on("notification_place_order_from_fe", (dataToEmit) => {
+      socket.emit(
+        `notification_place_order_from_be_${dataToEmit?.customerId}`,
+        dataToEmit
+      );
+    });
   });
 
   if (env.BUILD_MODE === "production") {
