@@ -15,6 +15,7 @@ export const ORDER_INVITATION_STATUS = {
   DELIVERING: "DELIVERING",
   CANCELLED: "CANCELLED",
   DONE: "DONE",
+  REFUND: "REFUND",
 };
 // export const PAYMENT_METHOD = {
 //   CASH: "cash",

@@ -43,9 +43,17 @@ const START_SERVER = () => {
         dataToEmit
       );
     });
+
     socket.on("notification_place_order_from_fe", (dataToEmit) => {
       socket.emit(
         `notification_place_order_from_be_${dataToEmit?.customerId}`,
+        dataToEmit
+      );
+    });
+
+    socket.on("accept_delivery_order_from_fe", (dataToEmit) => {
+      socket.broadcast.emit(
+        `accept_delivery_order_from_be_${dataToEmit?.ownerNotificationId}`,
         dataToEmit
       );
     });
