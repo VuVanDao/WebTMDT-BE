@@ -43,7 +43,6 @@ const GetAllProduct = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const userId = req.jwtDecoded._id;
     const productId = req.body.id;
     const productImage = req.files;
     const result = await productService.update(

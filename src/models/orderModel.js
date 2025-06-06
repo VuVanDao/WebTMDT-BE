@@ -1,6 +1,12 @@
 import Joi from "joi";
 import { GET_DB } from "~/config/mongodb";
-import { ORDER_INVITATION_STATUS } from "~/utils/constants";
+import {
+  EMAIL_RULE,
+  EMAIL_RULE_MESSAGE,
+  OBJECT_ID_RULE,
+  OBJECT_ID_RULE_MESSAGE,
+  ORDER_INVITATION_STATUS,
+} from "~/utils/constants";
 import { shopModel } from "./shopModel";
 import { productModel } from "./productModel";
 import { ObjectId } from "mongodb";
@@ -19,6 +25,19 @@ const ORDER_COLLECTION_SCHEMA = Joi.object({
     .default(ORDER_INVITATION_STATUS.PENDING),
   customerInfo: Joi.object().required(),
   textMessage: Joi.string().default(""),
+  comments: Joi.array()
+    .items({
+      userId: Joi.string()
+        .pattern(OBJECT_ID_RULE)
+        .message(OBJECT_ID_RULE_MESSAGE),
+      userEmail: Joi.string().pattern(EMAIL_RULE).message(EMAIL_RULE_MESSAGE),
+      userAvatar: Joi.string(),
+      username: Joi.string(),
+      rating: Joi.number().required(),
+      commentContent: Joi.string(),
+      commentAt: Joi.date().timestamp(),
+    })
+    .default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
@@ -39,6 +58,18 @@ const createNew = async (orderData) => {
     throw new Error(error);
   }
 };
+
+const findOneById = async (id) => {
+  try {
+    const order = await GET_DB()
+      .collection(ORDER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) });
+    return order;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const getAllOrder = async (statusOrder, customerId) => {
   try {
     if (statusOrder === "All") {
@@ -96,6 +127,11 @@ const getAllOrder = async (statusOrder, customerId) => {
           {
             $match: {
               $and: queryCondition,
+            },
+          },
+          {
+            $sort: {
+              createdAt: -1,
             },
           },
           {
@@ -205,4 +241,5 @@ export const orderModel = {
   getOrderByShopId,
   update,
   deleteOrder,
+  findOneById,
 };

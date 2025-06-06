@@ -40,7 +40,24 @@ const getOrderByShopId = async (shopId) => {
 };
 const update = async (data, orderId) => {
   try {
-    const ordersResult = await orderModel.update(data, orderId);
+    const existsOrder = await orderModel.findOneById(orderId);
+    let ordersResult = "";
+    if (data?.commentToAdd) {
+      ordersResult = await orderModel.update(
+        {
+          comments:
+            existsOrder.comments?.length >= 1
+              ? [
+                  ...existsOrder.comments,
+                  { ...data?.commentToAdd, commentAt: Date.now() },
+                ]
+              : [{ ...data?.commentToAdd, commentAt: Date.now() }],
+        },
+        orderId
+      );
+    } else {
+      ordersResult = await orderModel.update(data, orderId);
+    }
     return ordersResult;
   } catch (error) {
     throw error;

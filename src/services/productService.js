@@ -86,6 +86,17 @@ const update = async (productId, reqBody, productImage) => {
         productId,
         uploadResult.secure_url
       );
+    } else if (reqBody?.commentToAdd) {
+      //th update comment
+      updatedProduct = await productModel.update(productId, {
+        comments:
+          existsProduct.comments?.length >= 1
+            ? [
+                ...existsProduct.comments,
+                { ...reqBody?.commentToAdd, commentAt: Date.now() },
+              ]
+            : [{ ...reqBody?.commentToAdd, commentAt: Date.now() }],
+      });
     } else {
       //th3:change other fields
       updatedProduct = await productModel.update(productId, reqBody);
