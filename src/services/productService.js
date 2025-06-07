@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { productModel } from "~/models/productModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 import ApiError from "~/utils/ApiError";
+import { ORDER_INVITATION_STATUS } from "~/utils/constants";
 
 const createNew = async (reqBody, shopId) => {
   try {
@@ -97,6 +98,15 @@ const update = async (productId, reqBody, productImage) => {
               ]
             : [{ ...reqBody?.commentToAdd, commentAt: Date.now() }],
       });
+    } else if (reqBody?.newQuantity) {
+      //th3:change other fields
+      let newData = {
+        ...reqBody,
+        quantity: +existsProduct?.quantity - reqBody?.newQuantity,
+        sold: +existsProduct?.sold + +reqBody?.newQuantity,
+      };
+      delete newData?.newQuantity;
+      updatedProduct = await productModel.update(productId, newData);
     } else {
       //th3:change other fields
       updatedProduct = await productModel.update(productId, reqBody);
