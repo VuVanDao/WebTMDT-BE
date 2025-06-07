@@ -12,6 +12,7 @@ import {
   SHOP_STATUS_STATE,
 } from "~/utils/constants";
 import { userModel } from "./userModel";
+import { productModel } from "./productModel";
 const SHOP_OWNER_COLLECTION_NAME = "shop";
 const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   name: Joi.string().required().trim().min(2).strict(),
@@ -110,11 +111,63 @@ const GetAllShop = async () => {
 };
 const getDetailShop = async (id) => {
   try {
+    // const result = await GET_DB()
+    //   .collection(SHOP_OWNER_COLLECTION_NAME)
+    //   .aggregate([
+    //     {
+    //       $match: {
+    //         _id: new ObjectId(id), // hoặc điều kiện khác
+    //       },
+    //     },
+    //     {
+    //       // Lookup để join với products collection
+    //       $lookup: {
+    //         from: productModel.PRODUCT_COLLECTION_NAME, // tên collection chứa sản phẩm
+    //         localField: "_id", // _id của shop
+    //         foreignField: "shopId", // shopId trong products
+    //         as: "products",
+    //       },
+    //     },
+    //     {
+    //       // Unwind để tách từng sản phẩm
+    //       $unwind: "$products",
+    //     },
+    //     {
+    //       // Project để chỉ lấy thông tin cần thiết
+    //       $project: {
+    //         comments: "$products.comments",
+    //       },
+    //     },
+    //   ])
+    //   .toArray();
+
     const result = await GET_DB()
       .collection(SHOP_OWNER_COLLECTION_NAME)
-      .findOne({
-        _id: new ObjectId(id),
-      });
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(id), // hoặc điều kiện khác
+          },
+        },
+        {
+          // Lookup để join với products collection
+          $lookup: {
+            from: productModel.PRODUCT_COLLECTION_NAME,
+            localField: "_id",
+            foreignField: "shopId",
+            as: "products",
+            pipeline: [
+              {
+                $project: {
+                  updatedAt: 0,
+                },
+              },
+            ],
+          },
+        },
+      ])
+      .toArray();
+
     return result;
   } catch (error) {
     throw new Error(error);

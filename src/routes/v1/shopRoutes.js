@@ -13,4 +13,5 @@ Router.route("/register_shop_logo/:id").post(
   shopController.registerLogo
 );
 Router.route("/browseShop").post(shopController.browseShop);
+Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
 export const shopRouters = Router;

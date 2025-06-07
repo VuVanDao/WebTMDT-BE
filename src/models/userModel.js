@@ -29,7 +29,7 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   role: Joi.string()
     .valid(...Object.values(USER_ROLES))
     .default(USER_ROLES.ADMIN),
-  address: Joi.array().items(Joi.string()).default(""),
+  address: Joi.string().default(""),
   isActive: Joi.boolean().default(false),
   online: Joi.boolean().default(false),
   verifyToken: Joi.string(),
@@ -116,9 +116,10 @@ const GetAllAccount = async () => {
 };
 const createNew = async (data) => {
   try {
+    const validateData = await validateBeforeCreate(data);
     const createdUser = await GET_DB()
       .collection(USER_COLLECTION_NAME)
-      .insertOne(data);
+      .insertOne(validateData);
     return createdUser;
   } catch (error) {
     throw new Error(error);
@@ -169,6 +170,17 @@ const search = async (queryFilter) => {
     throw new Error(error);
   }
 };
+
+const deleteAccount = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .deleteOne({ _id: new ObjectId(id) });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const userModel = {
   USER_COLLECTION_NAME,
   USER_COLLECTION_SCHEMA,
@@ -179,4 +191,5 @@ export const userModel = {
   GetAllAccount,
   createNew,
   search,
+  deleteAccount,
 };

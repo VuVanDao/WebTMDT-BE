@@ -14,7 +14,8 @@ Router.route("/register").post(
 );
 Router.route("/")
   .post(userValidation.createNew, userController.createNew)
-  .get(userController.search);
+  .get(userController.search)
+  .delete(userController.deleteAccount);
 
 Router.route("/verify").put(
   userValidation.verifyAccount,

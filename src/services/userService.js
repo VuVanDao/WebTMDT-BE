@@ -273,6 +273,14 @@ const search = async (queryFilter) => {
     throw error;
   }
 };
+const deleteAccount = async (id) => {
+  try {
+    const result = await userModel.deleteAccount(id);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const userServices = {
   login,
   register,
@@ -284,4 +292,5 @@ export const userServices = {
   GetAllAccount,
   createNew,
   search,
+  deleteAccount,
 };
