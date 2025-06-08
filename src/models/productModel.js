@@ -7,6 +7,7 @@ import {
   OBJECT_ID_RULE,
   OBJECT_ID_RULE_MESSAGE,
 } from "~/utils/constants";
+import { shopModel } from "./shopModel";
 
 const PRODUCT_COLLECTION_NAME = "products";
 const PRODUCT_COLLECTION_SCHEMA = Joi.object({
@@ -68,7 +69,22 @@ const findOneById = async (id) => {
   try {
     const createdNewProduct = await GET_DB()
       .collection(PRODUCT_COLLECTION_NAME)
-      .findOne({ _id: new ObjectId(id) });
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: shopModel.SHOP_OWNER_COLLECTION_NAME,
+            localField: "shopId",
+            foreignField: "_id",
+            as: "ShopInfo",
+          },
+        },
+      ])
+      .toArray();
     return createdNewProduct;
   } catch (error) {
     throw new Error(error);

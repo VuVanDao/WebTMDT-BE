@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { productModel } from "~/models/productModel";
+import { shopModel } from "~/models/shopModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 import ApiError from "~/utils/ApiError";
-import { ORDER_INVITATION_STATUS } from "~/utils/constants";
 
 const createNew = async (reqBody, shopId) => {
   try {
@@ -121,7 +121,8 @@ const update = async (productId, reqBody, productImage) => {
 const getProductById = async (id) => {
   try {
     let detailProduct = await productModel.findOneById(id);
-    return detailProduct;
+    let detailShop = await shopModel.getDetailShop(detailProduct[0]?.shopId);
+    return { ...detailProduct[0], ShopInfo: detailShop };
   } catch (error) {
     throw error;
   }
