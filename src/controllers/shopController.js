@@ -60,9 +60,30 @@ const browseShop = async (req, res, next) => {
     next(error);
   }
 };
+const updateShop = async (req, res, next) => {
+  try {
+    const shopId = req.jwtDecoded.shopId;
+    const shopLogo = req.file;
+    const shopData = req.body;
+    if (!shopId || !shopData) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter" });
+    }
+    const updatedShop = await shopService.updateShop(
+      shopId,
+      shopData,
+      shopLogo
+    );
+    res.status(StatusCodes.OK).json(updatedShop);
+  } catch (error) {
+    next(error);
+  }
+};
 export const shopController = {
   register,
   getDetailShop,
   registerLogo,
   browseShop,
+  updateShop,
 };

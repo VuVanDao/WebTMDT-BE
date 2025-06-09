@@ -136,6 +136,14 @@ const searchProduct = async (queryFilter) => {
     throw error;
   }
 };
+const deleteProduct = async (id) => {
+  try {
+    const result = await productModel.deleteProduct(id);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const productService = {
   createNew,
   addImage,
@@ -143,4 +151,5 @@ export const productService = {
   update,
   getProductById,
   searchProduct,
+  deleteProduct,
 };

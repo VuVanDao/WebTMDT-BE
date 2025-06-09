@@ -79,6 +79,19 @@ const searchProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+const deleteProduct = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    if (!id) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: "Missing id" });
+    }
+    const result = await productService.deleteProduct(id);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const productController = {
   createNew,
   addImage,
@@ -86,4 +99,5 @@ export const productController = {
   update,
   getProductById,
   searchProduct,
+  deleteProduct,
 };

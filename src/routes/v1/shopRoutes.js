@@ -1,5 +1,6 @@
 import express from "express";
 import { shopController } from "~/controllers/shopController";
+import { authMiddleware } from "~/middlewares/authMiddlware";
 import { multerMiddleware } from "~/middlewares/multerMiddleware";
 import { shopValidation } from "~/validations/shopValidation";
 
@@ -14,4 +15,9 @@ Router.route("/register_shop_logo/:id").post(
 );
 Router.route("/browseShop").post(shopController.browseShop);
 Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
+Router.route("/").put(
+  authMiddleware.isAuthorized,
+  multerMiddleware.upload.single("logo"),
+  shopController.updateShop
+);
 export const shopRouters = Router;

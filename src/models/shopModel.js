@@ -111,36 +111,6 @@ const GetAllShop = async () => {
 };
 const getDetailShop = async (id) => {
   try {
-    // const result = await GET_DB()
-    //   .collection(SHOP_OWNER_COLLECTION_NAME)
-    //   .aggregate([
-    //     {
-    //       $match: {
-    //         _id: new ObjectId(id), // hoặc điều kiện khác
-    //       },
-    //     },
-    //     {
-    //       // Lookup để join với products collection
-    //       $lookup: {
-    //         from: productModel.PRODUCT_COLLECTION_NAME, // tên collection chứa sản phẩm
-    //         localField: "_id", // _id của shop
-    //         foreignField: "shopId", // shopId trong products
-    //         as: "products",
-    //       },
-    //     },
-    //     {
-    //       // Unwind để tách từng sản phẩm
-    //       $unwind: "$products",
-    //     },
-    //     {
-    //       // Project để chỉ lấy thông tin cần thiết
-    //       $project: {
-    //         comments: "$products.comments",
-    //       },
-    //     },
-    //   ])
-    //   .toArray();
-
     const result = await GET_DB()
       .collection(SHOP_OWNER_COLLECTION_NAME)
       .aggregate([
@@ -199,6 +169,20 @@ const browseShop = async (shopId, dataSelection) => {
     throw new Error(error);
   }
 };
+const updateShop = async (shopId, shopData) => {
+  try {
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(shopId) },
+        { $set: shopData },
+        { returnDocument: "after" }
+      );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
@@ -208,4 +192,5 @@ export const shopModel = {
   registerLogo,
   getDetailShopByOwnerId,
   browseShop,
+  updateShop,
 };

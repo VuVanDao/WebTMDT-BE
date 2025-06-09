@@ -124,29 +124,9 @@ const login = async (reqBody) => {
       );
     }
     let shopUserOwner = {};
-    // if (existsUser?.online === true) {
-    //   throw new ApiError(
-    //     StatusCodes.NOT_ACCEPTABLE,
-    //     "Tài khoản hiện đang hoạt động ở 1 nơi khác, vui lòng thử lại"
-    //   );
-    // }
     if (existsUser?.role === "shop_owner") {
       shopUserOwner = await shopModel.getDetailShopByOwnerId(existsUser?._id);
     }
-    await userModel.update(existsUser?._id, { online: true });
-    // tao token tra ve phia fe
-    //tao thong tin de dinh kem trong jwt: _id va email cua user
-    // const userInfo = {
-    //   _id: existsUser._id,
-    //   email: existsUser.email,
-    //   role: existsUser.role,
-    //   address: existsUser.address,
-    //   phoneNumber: existsUser.phoneNumber,
-    //   avatar: existsUser.avatar,
-    //   online: existsUser.online,
-    // };
-
-    // return { accessToken, refreshToken, ...pickUser(existsUser) };
 
     result = { ...pickUser(existsUser), shopId: shopUserOwner._id };
     return result;

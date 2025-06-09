@@ -22,5 +22,7 @@ Router.route("/update").put(
   productController.update
 );
 
-Router.route("/").get(productController.searchProduct);
+Router.route("/")
+  .get(productController.searchProduct)
+  .delete(authMiddleware.isAuthorized, productController.deleteProduct);
 export const productRouters = Router;

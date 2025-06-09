@@ -83,10 +83,29 @@ const browseShop = async (shopId, selection) => {
     throw error;
   }
 };
-
+const updateShop = async (shopId, shopData, shopLogo) => {
+  try {
+    let updatedShop = {};
+    if (shopLogo) {
+      const uploadResult = await cloudinaryProvider.streamUpload(
+        shopLogo.buffer,
+        "logoShop"
+      );
+      updatedShop = await shopModel.updateShop(shopId, {
+        logo: uploadResult.secure_url,
+      });
+    } else {
+      updatedShop = await shopModel.updateShop(shopId, shopData);
+    }
+    return updatedShop;
+  } catch (error) {
+    throw error;
+  }
+};
 export const shopService = {
   register,
   getDetailShop,
   registerLogo,
   browseShop,
+  updateShop,
 };

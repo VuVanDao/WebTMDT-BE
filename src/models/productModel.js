@@ -217,7 +217,16 @@ const searchProduct = async (queryFilter) => {
     throw new Error(error);
   }
 };
-
+const deleteProduct = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .deleteOne({ _id: new ObjectId(id) });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 // const searchProduct = async (queryFilter) => {
 //   try {
 //     const searchConditions = {
@@ -243,4 +252,5 @@ export const productModel = {
   GetAllProduct,
   update,
   searchProduct,
+  deleteProduct,
 };
