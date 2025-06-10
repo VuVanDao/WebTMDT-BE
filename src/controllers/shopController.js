@@ -80,10 +80,19 @@ const updateShop = async (req, res, next) => {
     next(error);
   }
 };
+const getAllShop = async (req, res, next) => {
+  try {
+    const allShop = await shopService.getAllShop();
+    res.status(StatusCodes.OK).json(allShop);
+  } catch (error) {
+    next(error);
+  }
+};
 export const shopController = {
   register,
   getDetailShop,
   registerLogo,
   browseShop,
   updateShop,
+  getAllShop,
 };

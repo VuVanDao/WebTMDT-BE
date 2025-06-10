@@ -28,7 +28,7 @@ const register = async (reqBody) => {
       description,
     };
     const registeredShop = await shopModel.register(newShop);
-    console.log("🚀 ~ register ~ registeredShop:", registeredShop);
+
     return registeredShop;
   } catch (error) {
     throw error;
@@ -102,10 +102,19 @@ const updateShop = async (shopId, shopData, shopLogo) => {
     throw error;
   }
 };
+const getAllShop = async () => {
+  try {
+    const allShop = await shopModel.getAllShop();
+    return allShop;
+  } catch (error) {
+    throw error;
+  }
+};
 export const shopService = {
   register,
   getDetailShop,
   registerLogo,
   browseShop,
   updateShop,
+  getAllShop,
 };

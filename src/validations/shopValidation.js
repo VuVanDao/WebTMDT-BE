@@ -11,7 +11,7 @@ import {
 export const register = async (req, res, next) => {
   const correctCondition = Joi.object({
     name: Joi.string().required(),
-    // description: Joi.string().required(),
+    description: Joi.string().required(),
     email: Joi.string()
       .required()
       .pattern(EMAIL_RULE)

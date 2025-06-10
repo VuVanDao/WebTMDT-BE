@@ -23,7 +23,6 @@ const isAuthorized = async (req, res, next) => {
       clientAccessToken,
       env.ACCESS_TOKEN_SECRET_SIGNATURE
     );
-    console.log("🚀 ~ isAuthorized ~ accessTokenDecoded:", accessTokenDecoded);
 
     //token hop le:luu vao req.jwtDecoded de dung
     req.jwtDecoded = accessTokenDecoded;

@@ -30,7 +30,6 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   address: Joi.string().required(),
   delivery_type: Joi.array()
     .items(Joi.valid(...Object.keys(DELIVERY_TYPE)))
-    .required()
     .default(DELIVERY_TYPE.FAST),
   ratingAverage: Joi.number().default(0),
   status: Joi.valid(...Object.keys(SHOP_STATUS_STATE)).default(false),
@@ -183,6 +182,34 @@ const updateShop = async (shopId, shopData) => {
     throw new Error(error);
   }
 };
+const getAllShop = async () => {
+  try {
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $lookup: {
+            from: userModel.USER_COLLECTION_NAME,
+            localField: "ownerId",
+            foreignField: "_id",
+            as: "Owner",
+            pipeline: [
+              {
+                $project: {
+                  password: 0,
+                  verifyToken: 0,
+                },
+              },
+            ],
+          },
+        },
+      ])
+      .toArray();
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
@@ -193,4 +220,5 @@ export const shopModel = {
   getDetailShopByOwnerId,
   browseShop,
   updateShop,
+  getAllShop,
 };

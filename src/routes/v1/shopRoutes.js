@@ -15,9 +15,11 @@ Router.route("/register_shop_logo/:id").post(
 );
 Router.route("/browseShop").post(shopController.browseShop);
 Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
-Router.route("/").put(
-  authMiddleware.isAuthorized,
-  multerMiddleware.upload.single("logo"),
-  shopController.updateShop
-);
+Router.route("/")
+  .put(
+    authMiddleware.isAuthorized,
+    multerMiddleware.upload.single("logo"),
+    shopController.updateShop
+  )
+  .get(shopController.getAllShop);
 export const shopRouters = Router;
