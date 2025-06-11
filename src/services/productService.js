@@ -36,7 +36,7 @@ const addImage = async (id, imageList) => {
         if (getProduct) {
           checkAddImage = await productModel.addImage(
             uploadResult.secure_url,
-            getProduct?._id
+            getProduct[0]?._id
           );
         }
       }
