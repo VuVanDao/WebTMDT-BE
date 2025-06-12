@@ -23,7 +23,7 @@ Router.use("/shops", shopRouters);
 Router.use("/orders", orderRouters);
 
 //categoryAPI
-Router.use("/category", categoryRouters);
+Router.use("/categories", categoryRouters);
 
 //cartAPI
 Router.use("/notifications", notificationRoutes);

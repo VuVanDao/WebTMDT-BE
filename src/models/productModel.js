@@ -92,7 +92,6 @@ const findOneById = async (id) => {
 };
 
 const addImage = async (imageFile, id) => {
-  console.log("🚀 ~ addImage ~ id:", id);
   try {
     const logoShop = await GET_DB()
       .collection(PRODUCT_COLLECTION_NAME)
@@ -101,7 +100,6 @@ const addImage = async (imageFile, id) => {
         { $push: { image: imageFile } },
         { returnDocument: "after" }
       );
-    console.log("🚀 ~ addImage ~ logoShop:", logoShop);
 
     return logoShop;
   } catch (error) {
