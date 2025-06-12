@@ -218,6 +218,7 @@ const searchProduct = async (queryFilter) => {
     throw new Error(error);
   }
 };
+
 const deleteProduct = async (id) => {
   try {
     const result = await GET_DB()

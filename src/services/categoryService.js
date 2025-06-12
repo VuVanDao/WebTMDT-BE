@@ -30,7 +30,16 @@ const getAllCategory = async () => {
     throw error;
   }
 };
+const searchCategory = async (queryFilter) => {
+  try {
+    const result = await categoryModel.searchCategory(queryFilter);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const categoryService = {
   createNewCategory,
   getAllCategory,
+  searchCategory,
 };

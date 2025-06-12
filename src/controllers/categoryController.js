@@ -17,7 +17,18 @@ const getAllCategory = async (req, res, next) => {
     next(error);
   }
 };
+const searchCategory = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    const queryFilter = q;
+    const result = await categoryService.searchCategory(queryFilter);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const categoryController = {
   createNewCategory,
   getAllCategory,
+  searchCategory,
 };

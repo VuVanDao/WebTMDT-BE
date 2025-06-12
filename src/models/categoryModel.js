@@ -40,10 +40,53 @@ const getAllCategory = async () => {
     throw new Error(error);
   }
 };
+
+const searchCategory = async (queryFilter) => {
+  try {
+    const queryCondition = [];
+    //xu ly query cho tung truong hop
+    if (queryFilter) {
+      Object.keys(queryFilter).forEach((key) => {
+        //ko phan biet chu hoa chu thuong
+        queryCondition.push({
+          [key]: { $regex: new RegExp(queryFilter[key], "i") },
+        });
+      });
+    }
+    const query = await GET_DB()
+      .collection(CATEGORY_COLLECTION_NAME)
+      .aggregate(
+        [
+          {
+            $match: {
+              $and: queryCondition,
+            },
+          },
+          {
+            //sort theo title theo A-Z
+            $sort: {
+              name: 1,
+            },
+          },
+        ],
+        {
+          //colaation: dung de fix loi sort khong chinh xac
+          collation: {
+            locale: "en",
+          },
+        }
+      )
+      .toArray();
+    return query;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const categoryModel = {
   CATEGORY_COLLECTION_NAME,
   CATEGORY_COLLECTION_SCHEMA,
   createNewCategory,
   findOneCategory,
   getAllCategory,
+  searchCategory,
 };

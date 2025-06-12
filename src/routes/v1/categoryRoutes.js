@@ -9,4 +9,5 @@ Router.route("/")
     categoryController.createNewCategory
   )
   .get(categoryController.getAllCategory);
+Router.route("/search").get(categoryController.searchCategory);
 export const categoryRouters = Router;
