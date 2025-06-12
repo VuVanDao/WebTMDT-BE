@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { categoryModel } from "~/models/categoryModel";
-import { ApiError } from "~/utils/ApiError";
+import ApiError from "~/utils/ApiError";
 
 const createNewCategory = async (reqBody) => {
   try {
