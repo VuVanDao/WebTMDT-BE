@@ -8,6 +8,7 @@ Router.route("/")
     categoryValidation.createNewCategory,
     categoryController.createNewCategory
   )
-  .get(categoryController.getAllCategory);
+  .get(categoryController.getAllCategory)
+  .delete(categoryController.deleteCategory);
 Router.route("/search").get(categoryController.searchCategory);
 export const categoryRouters = Router;

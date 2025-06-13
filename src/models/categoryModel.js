@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
 
 const CATEGORY_COLLECTION_NAME = "category";
@@ -82,6 +83,19 @@ const searchCategory = async (queryFilter) => {
     throw new Error(error);
   }
 };
+
+const deleteCategory = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(CATEGORY_COLLECTION_NAME)
+      .deleteOne({
+        _id: new ObjectId(id),
+      });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const categoryModel = {
   CATEGORY_COLLECTION_NAME,
   CATEGORY_COLLECTION_SCHEMA,
@@ -89,4 +103,5 @@ export const categoryModel = {
   findOneCategory,
   getAllCategory,
   searchCategory,
+  deleteCategory,
 };

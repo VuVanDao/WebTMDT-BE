@@ -38,8 +38,17 @@ const searchCategory = async (queryFilter) => {
     throw error;
   }
 };
+const deleteCategory = async (id) => {
+  try {
+    const deletedCategory = await categoryModel.deleteCategory(id);
+    return deletedCategory;
+  } catch (error) {
+    throw error;
+  }
+};
 export const categoryService = {
   createNewCategory,
   getAllCategory,
   searchCategory,
+  deleteCategory,
 };
