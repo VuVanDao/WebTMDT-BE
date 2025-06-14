@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { shopModel } from "~/models/shopModel";
 import { userModel } from "~/models/userModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
+import { SHOP_STATUS_STATE, USER_ROLES } from "~/utils/constants";
 
 const register = async (reqBody) => {
   try {
@@ -68,15 +69,17 @@ const getDetailShop = async (id) => {
 };
 const browseShop = async (shopId, selection) => {
   try {
-    if (selection === "denied") {
-      return null;
-    }
     const dataSelection = {
-      status: selection === "accept" ? true : "denied",
+      status:
+        selection === "accept"
+          ? SHOP_STATUS_STATE.ACCEPT
+          : SHOP_STATUS_STATE.DENIED,
     };
     const shopBrowsed = await shopModel.browseShop(shopId, dataSelection);
-    if (shopBrowsed) {
-      await userModel.update(shopBrowsed?.ownerId, { role: "shop_owner" });
+    if (selection === "accept") {
+      await userModel.update(shopBrowsed?.ownerId, {
+        role: USER_ROLES.SHOP_OWNER,
+      });
     }
     return shopBrowsed;
   } catch (error) {

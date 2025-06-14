@@ -39,10 +39,9 @@ export const ALLOW_COMMON_FILE_TYPES = [
 ];
 
 export const SHOP_STATUS_STATE = {
-  true: true,
-  false: false,
-  accept: "accept",
-  denied: "denied",
+  ACCEPT: "accept",
+  DENIED: "denied",
+  PENDING: "pending",
 };
 export const USER_ROLES = {
   CUSTOMER: "customer",

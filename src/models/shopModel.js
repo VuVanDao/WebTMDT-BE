@@ -32,7 +32,9 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
     .items(Joi.valid(...Object.keys(DELIVERY_TYPE)))
     .default(DELIVERY_TYPE.FAST),
   ratingAverage: Joi.number().default(0),
-  status: Joi.valid(...Object.keys(SHOP_STATUS_STATE)).default(false),
+  status: Joi.valid(...Object.keys(SHOP_STATUS_STATE)).default(
+    SHOP_STATUS_STATE.PENDING
+  ),
   ratingAverageVoted: Joi.number().default(0),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
@@ -71,7 +73,7 @@ const GetAllShop = async () => {
   try {
     const queryCondition = [
       {
-        status: false,
+        status: SHOP_STATUS_STATE.PENDING,
       },
     ];
     const result = await GET_DB()
