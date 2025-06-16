@@ -70,10 +70,19 @@ const deleteOrder = async (req, res, next) => {
     next(error);
   }
 };
+const getOrderByAdmin = async (req, res, next) => {
+  try {
+    const result = await orderService.getOrderByAdmin();
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const orderController = {
   createNew,
   getAllOrder,
   getOrderByShopId,
   update,
   deleteOrder,
+  getOrderByAdmin,
 };

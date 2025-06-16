@@ -24,5 +24,6 @@ Router.route("/update").put(
 
 Router.route("/")
   .get(productController.searchProduct)
-  .delete(authMiddleware.isAuthorized, productController.deleteProduct);
+  .delete(authMiddleware.isAuthorized, productController.deleteProduct)
+  .post(productController.findProduct);
 export const productRouters = Router;

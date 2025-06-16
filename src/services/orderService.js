@@ -4,13 +4,14 @@ import { productModel } from "~/models/productModel";
 
 const createNew = async (orderData) => {
   try {
-    const { productId, customerId } = orderData;
+    const { productId, customerId, shopId } = orderData;
+    console.log("🚀 ~ createNew ~ orderData:", orderData);
     let newProductId = new ObjectId(productId);
     let newCustomerId = new ObjectId(customerId);
     const shopIdOwnerProduct = await productModel.findOneById(productId);
     const orderResult = await orderModel.createNew({
       ...orderData,
-      shopId: shopIdOwnerProduct.shopId,
+      shopId: new ObjectId(shopId),
       productId: newProductId,
       customerId: newCustomerId,
     });
@@ -71,11 +72,19 @@ const deleteOrder = async (orderId) => {
     throw error;
   }
 };
-
+const getOrderByAdmin = async () => {
+  try {
+    const AllOrder = await orderModel.getOrderByAdmin();
+    return AllOrder;
+  } catch (error) {
+    throw error;
+  }
+};
 export const orderService = {
   createNew,
   getAllOrder,
   getOrderByShopId,
   update,
   deleteOrder,
+  getOrderByAdmin,
 };

@@ -10,4 +10,5 @@ Router.route("/")
 
 Router.route("/get_by_shop_id").get(orderController.getOrderByShopId);
 Router.route("/update/:orderId").put(orderController.update);
+Router.route("/get_order_by_admin").get(orderController.getOrderByAdmin);
 export const orderRouters = Router;

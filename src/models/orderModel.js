@@ -233,6 +233,27 @@ const deleteOrder = async (orderId) => {
     throw new Error(error);
   }
 };
+const getOrderByAdmin = async () => {
+  try {
+    const AllOrder = await GET_DB()
+      .collection(ORDER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $lookup: {
+            from: shopModel.SHOP_OWNER_COLLECTION_NAME,
+            localField: "shopId",
+            foreignField: "_id",
+            as: "ShopInfo",
+          },
+        },
+      ])
+      .sort({ createdAt: -1 })
+      .toArray();
+    return AllOrder;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const orderModel = {
   ORDER_COLLECTION_NAME,
   ORDER_COLLECTION_SCHEMA,
@@ -242,4 +263,5 @@ export const orderModel = {
   update,
   deleteOrder,
   findOneById,
+  getOrderByAdmin,
 };

@@ -144,6 +144,30 @@ const deleteProduct = async (id) => {
     throw error;
   }
 };
+const findProduct = async (findProduct) => {
+  try {
+    const { type, data, value } = findProduct;
+    let result = [];
+    if (type === "price") {
+      result = await productModel.findProduct({
+        $and: [
+          {
+            $expr: {
+              $and: [
+                { $gte: [{ $toDouble: "$price" }, data.from] },
+                { $lte: [{ $toDouble: "$price" }, data.to] },
+              ],
+            },
+          },
+          { name: { $regex: value, $options: "i" } },
+        ],
+      });
+    }
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const productService = {
   createNew,
   addImage,
@@ -152,4 +176,5 @@ export const productService = {
   getProductById,
   searchProduct,
   deleteProduct,
+  findProduct,
 };

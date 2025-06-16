@@ -13,7 +13,7 @@ const PRODUCT_COLLECTION_NAME = "products";
 const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   name: Joi.string().required().trim().min(2),
   description: Joi.string().required().trim().min(3),
-  price: Joi.string().required(),
+  price: Joi.number().required(),
   discount: Joi.optional().default(null),
   quantity: Joi.string().required(),
   image: Joi.array().items().default([]),
@@ -163,41 +163,6 @@ const update = async (productId, updateData) => {
 
 const searchProduct = async (queryFilter) => {
   try {
-    const queryCondition = [];
-    //xu ly query cho tung truong hop
-    if (queryFilter) {
-      Object.keys(queryFilter).forEach((key) => {
-        //ko phan biet chu hoa chu thuong
-        queryCondition.push({
-          [key]: { $regex: new RegExp(queryFilter[key], "i") },
-        });
-      });
-    }
-    // const query = await GET_DB()
-    //   .collection(PRODUCT_COLLECTION_NAME)
-    //   .aggregate(
-    //     [
-    //       {
-    //         $match: {
-    //           $and: queryCondition,
-    //         },
-    //       },
-    //       {
-    //         //sort theo title theo A-Z
-    //         $sort: {
-    //           title: 1,
-    //         },
-    //       },
-    //     ],
-    //     {
-    //       //colaation: dung de fix loi sort khong chinh xac
-    //       collation: {
-    //         locale: "en",
-    //       },
-    //     }
-    //   )
-    //   .toArray();
-
     //neu dung cach nay thi doi strict trong mongodb.js = false
     const query = await GET_DB()
       .collection(PRODUCT_COLLECTION_NAME)
@@ -229,6 +194,18 @@ const deleteProduct = async (id) => {
     throw new Error(error);
   }
 };
+const findProduct = async (condition) => {
+  try {
+    const result = await GET_DB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .find(condition)
+      .toArray();
+
+    return result || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 // const searchProduct = async (queryFilter) => {
 //   try {
 //     const searchConditions = {
@@ -255,4 +232,5 @@ export const productModel = {
   update,
   searchProduct,
   deleteProduct,
+  findProduct,
 };

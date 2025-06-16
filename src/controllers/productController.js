@@ -92,6 +92,14 @@ const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+const findProduct = async (req, res, next) => {
+  try {
+    const result = await productService.findProduct(req.body);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const productController = {
   createNew,
   addImage,
@@ -100,4 +108,5 @@ export const productController = {
   getProductById,
   searchProduct,
   deleteProduct,
+  findProduct,
 };
