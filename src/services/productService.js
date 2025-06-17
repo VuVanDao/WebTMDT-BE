@@ -99,7 +99,6 @@ const update = async (productId, reqBody, productImage) => {
             : [{ ...reqBody?.commentToAdd, commentAt: Date.now() }],
       });
     } else if (reqBody?.newQuantity) {
-      //th3:change other fields
       let newData = {
         ...reqBody,
         quantity: +existsProduct?.quantity - reqBody?.newQuantity,

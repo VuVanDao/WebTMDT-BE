@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb";
 import { orderModel } from "~/models/orderModel";
 import { productModel } from "~/models/productModel";
+import { ORDER_INVITATION_STATUS } from "~/utils/constants";
 
 const createNew = async (orderData) => {
   try {
     const { productId, customerId, shopId } = orderData;
-    console.log("🚀 ~ createNew ~ orderData:", orderData);
     let newProductId = new ObjectId(productId);
     let newCustomerId = new ObjectId(customerId);
     const shopIdOwnerProduct = await productModel.findOneById(productId);
@@ -56,6 +56,45 @@ const update = async (data, orderId) => {
         },
         orderId
       );
+    } else if (data?.status === ORDER_INVITATION_STATUS.DONE) {
+      //tim order duoc update voi status DONE
+      let targetOrder = await orderModel.findOneById(orderId);
+      //tim product co id la productId cua order
+      let targetProduct = await productModel.findOneById(
+        targetOrder?.productId
+      );
+
+      //tim categoryId trung voi category cua order
+      let dataCategoryToUpdate = targetProduct[0]?.categoryId?.find(
+        (item) => item?.name === targetOrder?.category
+      );
+      //cap nhat quantity cua categoryId trong product
+
+      dataCategoryToUpdate.quantity -= targetOrder?.quantity;
+
+      //cap nhat categoryId cua product
+      targetProduct[0].categoryId = targetProduct[0]?.categoryId?.filter(
+        (item) => item?.name !== targetOrder?.category
+      );
+      targetProduct[0].categoryId.push(dataCategoryToUpdate);
+
+      //cap nhat product
+      let updateQuantityProduct = await productModel.update(
+        targetOrder?.productId,
+        {
+          categoryId: targetProduct[0]?.categoryId,
+        }
+      );
+      //cap nhat sold cua product
+      let updateSoldProduct = await productModel.update(
+        targetOrder?.productId,
+        {
+          sold: targetProduct[0]?.sold + targetOrder?.quantity,
+        }
+      );
+      if (updateQuantityProduct && updateSoldProduct)
+        //cap nhat order
+        ordersResult = await orderModel.update(data, orderId);
     } else {
       ordersResult = await orderModel.update(data, orderId);
     }

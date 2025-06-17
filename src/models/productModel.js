@@ -39,6 +39,8 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
       id: Joi.string(),
       name: Joi.string(),
       image: Joi.string(),
+      price: Joi.string(),
+      quantity: Joi.number(),
     })
     .default([]),
   tagsId: Joi.array().items().default([]),
