@@ -42,6 +42,7 @@ export const SHOP_STATUS_STATE = {
   ACCEPT: "accept",
   DENIED: "denied",
   PENDING: "pending",
+  CLOSED: "closed",
 };
 export const USER_ROLES = {
   CUSTOMER: "customer",

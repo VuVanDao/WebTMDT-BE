@@ -6,6 +6,7 @@ import { shopValidation } from "~/validations/shopValidation";
 
 const Router = express.Router();
 Router.route("/register_shop").post(
+  authMiddleware.isAuthorized,
   shopValidation.register,
   shopController.register
 );
@@ -13,7 +14,10 @@ Router.route("/register_shop_logo/:id").post(
   multerMiddleware.upload.single("logo"),
   shopController.registerLogo
 );
-Router.route("/browseShop").post(shopController.browseShop);
+Router.route("/browseShop").post(
+  authMiddleware.isAuthorized,
+  shopController.browseShop
+);
 Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
 Router.route("/")
   .put(

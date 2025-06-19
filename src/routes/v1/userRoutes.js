@@ -34,7 +34,14 @@ Router.route("/update").put(
 Router.route("/get_All_Product").get(userController.GetAllProduct);
 
 //admin
-Router.route("/get_all_shop").get(userController.GetAllShop);
-Router.route("/get_all_account").get(userController.GetAllAccount);
+authMiddleware.isAuthorized,
+  Router.route("/get_all_shop").get(
+    authMiddleware.isAuthorized,
+    userController.GetAllShop
+  );
+Router.route("/get_all_account").get(
+  authMiddleware.isAuthorized,
+  userController.GetAllAccount
+);
 
 export const userRouters = Router;

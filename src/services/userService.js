@@ -158,9 +158,9 @@ const update = async (userId, reqBody, userAvatarFile) => {
     }
     let updatedUser = {};
     //th1:change password
-    if (reqBody.current_password && reqBody.new_password) {
+    if (reqBody.currentPassword && reqBody.newPassword) {
       if (
-        !bcryptjs.compareSync(reqBody.current_password, existsUser?.password)
+        !bcryptjs.compareSync(reqBody.currentPassword, existsUser?.password)
       ) {
         throw new ApiError(
           StatusCodes.NOT_ACCEPTABLE,
@@ -168,7 +168,7 @@ const update = async (userId, reqBody, userAvatarFile) => {
         );
       }
       updatedUser = await userModel.update(userId, {
-        password: bcryptjs.hashSync(reqBody.new_password, 8),
+        password: bcryptjs.hashSync(reqBody.newPassword, 8),
       });
     } else if (userAvatarFile) {
       //th2:change avatar, upload file len cloudinary

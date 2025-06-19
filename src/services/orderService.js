@@ -53,6 +53,7 @@ const update = async (data, orderId) => {
                   { ...data?.commentToAdd, commentAt: Date.now() },
                 ]
               : [{ ...data?.commentToAdd, commentAt: Date.now() }],
+          updatedAt: Date.now(),
         },
         orderId
       );
@@ -83,20 +84,21 @@ const update = async (data, orderId) => {
         targetOrder?.productId,
         {
           categoryId: targetProduct[0]?.categoryId,
-        }
-      );
-      //cap nhat sold cua product
-      let updateSoldProduct = await productModel.update(
-        targetOrder?.productId,
-        {
           sold: targetProduct[0]?.sold + targetOrder?.quantity,
+          updatedAt: Date.now(),
         }
       );
-      if (updateQuantityProduct && updateSoldProduct)
+      if (updateQuantityProduct)
         //cap nhat order
-        ordersResult = await orderModel.update(data, orderId);
+        ordersResult = await orderModel.update(
+          { ...data, updatedAt: Date.now() },
+          orderId
+        );
     } else {
-      ordersResult = await orderModel.update(data, orderId);
+      ordersResult = await orderModel.update(
+        { ...data, updatedAt: Date.now() },
+        orderId
+      );
     }
     return ordersResult;
   } catch (error) {

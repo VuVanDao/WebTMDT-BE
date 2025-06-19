@@ -5,6 +5,7 @@ import { multerMiddleware } from "~/middlewares/multerMiddleware";
 import { productValidation } from "~/validations/productValidation";
 const Router = express.Router();
 Router.route("/create_new").post(
+  authMiddleware.isAuthorized,
   productValidation.createNew,
   productController.createNew
 );
