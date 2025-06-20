@@ -39,7 +39,7 @@ const START_SERVER = () => {
       // console.log("🚀 ~ socket.on ~ dataToEmit:", dataToEmit);
       // socket.broadcast.emit("shop_accept_an_order", dataToEmit); // ko gui cho user emit len ma gui cho cac user khac
       socket.broadcast.emit(
-        `user_place_an_order_be_${dataToEmit?.shopId}`,
+        `user_placed_an_order_be_${dataToEmit?.shopId}`,
         dataToEmit
       );
     });
