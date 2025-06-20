@@ -7,6 +7,7 @@ import ms from "ms";
 const refreshToken = async (req, res, next) => {
   try {
     const result = await userServices.refreshToken(req.cookies?.refreshToken);
+    console.log("🚀 ~ refreshToken ~ req:", req.jwtDecoded);
     res.cookie("accessToken", result.accessToken, {
       httpOnly: true,
       secure: true,

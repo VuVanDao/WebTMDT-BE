@@ -25,5 +25,5 @@ Router.route("/")
     multerMiddleware.upload.single("logo"),
     shopController.updateShop
   )
-  .get(shopController.getAllShop);
+  .get(authMiddleware.isAuthorized, shopController.getAllShop);
 export const shopRouters = Router;

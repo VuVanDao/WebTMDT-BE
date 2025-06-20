@@ -5,7 +5,19 @@ import { multerMiddleware } from "~/middlewares/multerMiddleware";
 import { userValidation } from "~/validations/userValidation";
 
 const Router = express.Router();
+
+//admin
+
+Router.route("/getAllShops").get(
+  authMiddleware.isAuthorized,
+  userController.GetAllShop
+);
+Router.route("/get_all_accounts").get(
+  authMiddleware.isAuthorized,
+  userController.GetAllAccount
+);
 //token
+
 Router.route("/refresh_token").post(userController.refreshToken);
 
 Router.route("/register").post(
@@ -32,16 +44,5 @@ Router.route("/update").put(
 );
 
 Router.route("/get_All_Product").get(userController.GetAllProduct);
-
-//admin
-authMiddleware.isAuthorized,
-  Router.route("/get_all_shop").get(
-    authMiddleware.isAuthorized,
-    userController.GetAllShop
-  );
-Router.route("/get_all_account").get(
-  authMiddleware.isAuthorized,
-  userController.GetAllAccount
-);
 
 export const userRouters = Router;
