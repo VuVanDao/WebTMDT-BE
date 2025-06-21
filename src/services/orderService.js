@@ -57,43 +57,75 @@ const update = async (data, orderId) => {
         },
         orderId
       );
-    } else if (data?.status === ORDER_INVITATION_STATUS.DONE) {
-      //tim order duoc update voi status DONE
-      let targetOrder = await orderModel.findOneById(orderId);
-      //tim product co id la productId cua order
-      let targetProduct = await productModel.findOneById(
-        targetOrder?.productId
-      );
-
-      //tim categoryId trung voi category cua order
-      let dataCategoryToUpdate = targetProduct[0]?.categoryId?.find(
-        (item) => item?.name === targetOrder?.category
-      );
-      //cap nhat quantity cua categoryId trong product
-
-      dataCategoryToUpdate.quantity -= targetOrder?.quantity;
-
-      //cap nhat categoryId cua product
-      targetProduct[0].categoryId = targetProduct[0]?.categoryId?.filter(
-        (item) => item?.name !== targetOrder?.category
-      );
-      targetProduct[0].categoryId.push(dataCategoryToUpdate);
-
-      //cap nhat product
-      let updateQuantityProduct = await productModel.update(
-        targetOrder?.productId,
-        {
-          categoryId: targetProduct[0]?.categoryId,
-          sold: targetProduct[0]?.sold + targetOrder?.quantity,
-          updatedAt: Date.now(),
-        }
-      );
-      if (updateQuantityProduct)
-        //cap nhat order
-        ordersResult = await orderModel.update(
-          { ...data, updatedAt: Date.now() },
-          orderId
+    } else if (
+      data?.status === ORDER_INVITATION_STATUS.DONE ||
+      data?.status === ORDER_INVITATION_STATUS.REJECTED ||
+      data?.status === ORDER_INVITATION_STATUS.ACCEPTED
+    ) {
+      if (data?.status === ORDER_INVITATION_STATUS.DONE) {
+        //tim order duoc update voi status DONE
+        let targetOrder = await orderModel.findOneById(orderId);
+        //tim product co id la productId cua order
+        let targetProduct = await productModel.findOneById(
+          targetOrder?.productId
         );
+
+        //tim categoryId trung voi category cua order
+        let dataCategoryToUpdate = targetProduct[0]?.categoryId?.find(
+          (item) => item?.name === targetOrder?.category
+        );
+        //cap nhat quantity cua categoryId trong product
+
+        dataCategoryToUpdate.quantity -= targetOrder?.quantity;
+
+        //cap nhat categoryId cua product
+        targetProduct[0].categoryId = targetProduct[0]?.categoryId?.filter(
+          (item) => item?.name !== targetOrder?.category
+        );
+        targetProduct[0].categoryId.push(dataCategoryToUpdate);
+
+        //cap nhat product
+        let updateQuantityProduct = await productModel.update(
+          targetOrder?.productId,
+          {
+            categoryId: targetProduct[0]?.categoryId,
+            sold: targetProduct[0]?.sold + targetOrder?.quantity,
+            updatedAt: Date.now(),
+          }
+        );
+        if (updateQuantityProduct)
+          //cap nhat order
+          ordersResult = await orderModel.update(
+            { ...data, updatedAt: Date.now() },
+            orderId
+          );
+      } else if (data?.status === ORDER_INVITATION_STATUS.REJECTED) {
+        //tim order duoc update voi status REJECTED tu phia client gui len
+        let targetOrder = await orderModel.findOneById(orderId);
+        if (targetOrder?.status === ORDER_INVITATION_STATUS.ACCEPTED) {
+          ordersResult = {
+            message: "Đơn hàng đã được xác nhận bởi người bán, không thể huỷ",
+          };
+        } else {
+          ordersResult = await orderModel.update(
+            { ...data, updatedAt: Date.now() },
+            orderId
+          );
+        }
+      } else {
+        //tim order duoc update voi status ACCEPTED tu phia client gui len
+        let targetOrder = await orderModel.findOneById(orderId);
+        if (targetOrder?.status === ORDER_INVITATION_STATUS.REJECTED) {
+          ordersResult = {
+            message: "Đơn hàng đã bị huỷ",
+          };
+        } else {
+          ordersResult = await orderModel.update(
+            { ...data, updatedAt: Date.now() },
+            orderId
+          );
+        }
+      }
     } else {
       ordersResult = await orderModel.update(
         { ...data, updatedAt: Date.now() },
