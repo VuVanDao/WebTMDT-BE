@@ -28,6 +28,7 @@ const isAuthorized = async (req, res, next) => {
     req.jwtDecoded = accessTokenDecoded;
     next();
   } catch (error) {
+    console.log("🚀 ~ isAuthorized ~ error:", error);
     //neu accessToken bi het han: tra ve 1 ma loi ne FE biet ma refresh token (410)
     if (error.message.includes("jwt expired")) {
       next(new ApiError(StatusCodes.GONE, "Need to refresh token"));

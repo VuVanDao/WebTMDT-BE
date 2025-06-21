@@ -129,7 +129,19 @@ const login = async (reqBody) => {
     }
 
     result = { ...pickUser(existsUser), shopId: shopUserOwner._id };
-    return result;
+    const accessToken = await jwtProvider.generateToken(
+      result,
+      env.ACCESS_TOKEN_SECRET_SIGNATURE,
+      // 5
+      env.ACCESS_TOKEN_LIFE
+    );
+    const refreshToken = await jwtProvider.generateToken(
+      result,
+      env.REFRESH_TOKEN_SECRET_SIGNATURE,
+      // 15
+      env.REFRESH_TOKEN_LIFE
+    );
+    return { accessToken, refreshToken, result };
   } catch (error) {
     throw error;
   }

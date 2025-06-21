@@ -17,7 +17,7 @@ Router.route("/get_All_Product/:id").get(productController.GetAllProduct);
 Router.route("/get_Product_By_Id/:id").get(productController.getProductById);
 
 Router.route("/update").put(
-  // authMiddleware.isAuthorized,
+  authMiddleware.isAuthorized,
   multerMiddleware.upload.array("imageProduct"),
   productValidation.update,
   productController.update

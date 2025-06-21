@@ -7,7 +7,6 @@ import ms from "ms";
 const refreshToken = async (req, res, next) => {
   try {
     const result = await userServices.refreshToken(req.cookies?.refreshToken);
-    console.log("🚀 ~ refreshToken ~ req:", req.jwtDecoded);
     res.cookie("accessToken", result.accessToken, {
       httpOnly: true,
       secure: true,
@@ -39,33 +38,22 @@ const verifyAccount = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const createdUser = await userServices.login(req.body);
+    const loginAccount = await userServices.login(req.body);
     //tao ra 2 loai token, access token, refresh token
-    const accessToken = await jwtProvider.generateToken(
-      createdUser,
-      env.ACCESS_TOKEN_SECRET_SIGNATURE,
-      // 5
-      env.ACCESS_TOKEN_LIFE
-    );
-    const refreshToken = await jwtProvider.generateToken(
-      createdUser,
-      env.REFRESH_TOKEN_SECRET_SIGNATURE,
-      // 15
-      env.REFRESH_TOKEN_LIFE
-    );
-    res.cookie("accessToken", accessToken, {
+
+    res.cookie("accessToken", loginAccount.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: ms("14 days"), //thoi gian song cua cookie
     });
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", loginAccount.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: ms("14 days"), //thoi gian song cua cookie
     });
-    res.status(StatusCodes.CREATED).json(createdUser);
+    res.status(StatusCodes.CREATED).json(loginAccount.result);
   } catch (error) {
     next(error);
   }
@@ -93,6 +81,7 @@ const update = async (req, res, next) => {
   try {
     const userId = req.jwtDecoded._id;
     const idUpdate = req.body?.idUpdate;
+    delete req.body.idUpdate;
     const userAvatarFile = req.file;
     const result = await userServices.update(
       idUpdate ? idUpdate : userId,

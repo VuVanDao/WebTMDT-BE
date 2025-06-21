@@ -6,16 +6,6 @@ import { userValidation } from "~/validations/userValidation";
 
 const Router = express.Router();
 
-//admin
-
-Router.route("/getAllShops").get(
-  authMiddleware.isAuthorized,
-  userController.GetAllShop
-);
-Router.route("/get_all_accounts").get(
-  authMiddleware.isAuthorized,
-  userController.GetAllAccount
-);
 //token
 
 Router.route("/refresh_token").post(userController.refreshToken);
@@ -45,4 +35,13 @@ Router.route("/update").put(
 
 Router.route("/get_All_Product").get(userController.GetAllProduct);
 
+//admin
+Router.route("/getAllShop").get(
+  authMiddleware.isAuthorized,
+  userController.GetAllShop
+);
+Router.route("/get_accounts").get(
+  authMiddleware.isAuthorized,
+  userController.GetAllAccount
+);
 export const userRouters = Router;
