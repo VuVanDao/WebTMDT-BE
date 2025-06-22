@@ -88,6 +88,21 @@ const update = async (productId, reqBody, productImage) => {
         uploadResult.secure_url
       );
     } else if (reqBody?.commentToAdd) {
+      let targetProduct = await productModel.findOneById(productId);
+      const { rating } = reqBody?.commentToAdd;
+      //cap nhat rating cua product
+      if (targetProduct[0]?.comments?.length > 0) {
+        const totalRating = targetProduct[0]?.comments.reduce(
+          (sum, item) => sum + (item?.rating || 0),
+          0
+        );
+        targetProduct[0].ratingAverage =
+          (totalRating + rating) / (targetProduct[0].comments.length + 1);
+      } else {
+        targetProduct[0].ratingAverage = rating;
+      }
+      console.log("🚀 ~ update ~ targetProduct[0]?.:", targetProduct[0]);
+
       //th update comment
       updatedProduct = await productModel.update(productId, {
         comments:
@@ -97,6 +112,7 @@ const update = async (productId, reqBody, productImage) => {
                 { ...reqBody?.commentToAdd, commentAt: Date.now() },
               ]
             : [{ ...reqBody?.commentToAdd, commentAt: Date.now() }],
+        ratingAverage: targetProduct[0].ratingAverage,
       });
     } else if (reqBody?.newQuantity) {
       let newData = {
@@ -145,23 +161,33 @@ const deleteProduct = async (id) => {
 };
 const findProduct = async (findProduct) => {
   try {
-    const { type, data, value } = findProduct;
+    const { data } = findProduct;
     let result = [];
-    if (type === "price") {
-      result = await productModel.findProduct({
-        $and: [
-          {
-            $expr: {
-              $and: [
-                { $gte: [{ $toDouble: "$price" }, data.from] },
-                { $lte: [{ $toDouble: "$price" }, data.to] },
+    let condition = [];
+    if (data?.price) {
+      condition.push({
+        $expr: {
+          $and: [
+            { $gte: [{ $toDouble: "$price" }, data.price.from] },
+            {
+              $lte: [
+                { $toDouble: "$price" },
+                data.price.to === 0 ? 1000000000 : data.price.to,
               ],
             },
-          },
-          { name: { $regex: value, $options: "i" } },
-        ],
+          ],
+        },
       });
     }
+
+    result = await productModel.findProduct({
+      $and: [...condition, { name: { $regex: data.value, $options: "i" } }],
+    });
+
+    if (data.shop) {
+      result = result?.find((item) => item?.name?.includes(data?.shop));
+    }
+
     return result;
   } catch (error) {
     throw error;

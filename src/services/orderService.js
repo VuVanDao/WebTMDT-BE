@@ -75,7 +75,6 @@ const update = async (data, orderId) => {
           (item) => item?.name === targetOrder?.category
         );
         //cap nhat quantity cua categoryId trong product
-
         dataCategoryToUpdate.quantity -= targetOrder?.quantity;
 
         //cap nhat categoryId cua product
