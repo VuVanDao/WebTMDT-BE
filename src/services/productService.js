@@ -101,8 +101,6 @@ const update = async (productId, reqBody, productImage) => {
       } else {
         targetProduct[0].ratingAverage = rating;
       }
-      console.log("🚀 ~ update ~ targetProduct[0]?.:", targetProduct[0]);
-
       //th update comment
       updatedProduct = await productModel.update(productId, {
         comments:
@@ -179,9 +177,18 @@ const findProduct = async (findProduct) => {
         },
       });
     }
+    if (data?.ratingAverage) {
+      condition.push({ ratingAverage: { $gte: data.ratingAverage } });
+    }
+    if (data?.value) {
+      condition.push({ name: { $regex: data.value, $options: "i" } });
+    }
+    if (data?.tags) {
+      condition.push({ tagsId: { $in: [data?.tags] } });
+    }
 
     result = await productModel.findProduct({
-      $and: [...condition, { name: { $regex: data.value, $options: "i" } }],
+      $and: [...condition],
     });
 
     if (data.shop) {

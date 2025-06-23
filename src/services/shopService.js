@@ -113,6 +113,14 @@ const getAllShop = async () => {
     throw error;
   }
 };
+const deleteShop = async (id) => {
+  try {
+    const result = await shopModel.deleteShop(id);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const shopService = {
   register,
   getDetailShop,
@@ -120,4 +128,5 @@ export const shopService = {
   browseShop,
   updateShop,
   getAllShop,
+  deleteShop,
 };

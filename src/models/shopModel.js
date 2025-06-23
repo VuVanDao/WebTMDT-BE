@@ -212,6 +212,19 @@ const getAllShop = async () => {
     throw new Error(error);
   }
 };
+const deleteShop = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(SHOP_OWNER_COLLECTION_NAME)
+      .deleteOne({
+        _id: new ObjectId(id),
+      });
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const shopModel = {
   SHOP_OWNER_COLLECTION_NAME,
   SHOP_OWNER_COLLECTION_SCHEMA,
@@ -223,4 +236,5 @@ export const shopModel = {
   browseShop,
   updateShop,
   getAllShop,
+  deleteShop,
 };

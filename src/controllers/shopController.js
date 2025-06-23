@@ -88,6 +88,15 @@ const getAllShop = async (req, res, next) => {
     next(error);
   }
 };
+const deleteShop = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const result = await shopService.deleteShop(id);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const shopController = {
   register,
   getDetailShop,
@@ -95,4 +104,5 @@ export const shopController = {
   browseShop,
   updateShop,
   getAllShop,
+  deleteShop,
 };
