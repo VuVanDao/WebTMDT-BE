@@ -30,6 +30,7 @@ const refreshToken = async (clientRefreshToken) => {
       phoneNumber: refreshTokenDecoded.phoneNumber,
       address: refreshTokenDecoded.address,
       cartItem: refreshTokenDecoded.cartItem,
+      shopId: refreshTokenDecoded.shopId,
     };
     //tao ra refresh token
     const accessToken = await jwtProvider.generateToken(

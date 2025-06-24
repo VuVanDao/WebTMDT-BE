@@ -61,6 +61,13 @@ const START_SERVER = () => {
         dataToEmit
       );
     });
+
+    socket.on("admin_browse_shop_from_fe", (dataToEmit) => {
+      socket.emit(
+        `admin_browse_shop_from_be_${dataToEmit?.Owner[0]?._id}`,
+        dataToEmit
+      );
+    });
   });
 
   if (env.BUILD_MODE === "production") {

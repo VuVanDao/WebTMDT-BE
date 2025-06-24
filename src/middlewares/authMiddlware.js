@@ -26,6 +26,7 @@ const isAuthorized = async (req, res, next) => {
 
     //token hop le:luu vao req.jwtDecoded de dung
     req.jwtDecoded = accessTokenDecoded;
+
     next();
   } catch (error) {
     //neu accessToken bi het han: tra ve 1 ma loi ne FE biet ma refresh token (410)

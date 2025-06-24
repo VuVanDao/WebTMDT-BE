@@ -36,6 +36,8 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
     SHOP_STATUS_STATE.PENDING
   ),
   ratingAverageVoted: Joi.number().default(0),
+  tagsProductShopSell: Joi.array()
+  .default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
