@@ -12,4 +12,6 @@ Router.route("/")
   )
   .get(authMiddleware.isAuthorized, brandController.getAllBrand);
 
+Router.route("/find").get(brandController.findByAlphabet);
+
 export const brandRouters = Router;
