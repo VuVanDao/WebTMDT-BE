@@ -67,7 +67,8 @@ const update = async (data, brandId) => {
     throw new Error(error);
   }
 };
-const deleteOrder = async (brandId) => {
+const deleteBrand = async (brandId) => {
+  console.log("🚀 ~ deleteBrand ~ brandId:", brandId);
   try {
     const result = await GET_DB()
       .collection(BRAND_COLLECTION_NAME)
@@ -98,7 +99,7 @@ export const brandModel = {
   BRAND_COLLECTION_SCHEMA,
   createNew,
   update,
-  deleteOrder,
+  deleteBrand,
   findOneById,
   getAllBrand,
   findByAlphabet,

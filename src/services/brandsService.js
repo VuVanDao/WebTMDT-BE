@@ -41,8 +41,22 @@ const findByAlphabet = async (id) => {
     throw error;
   }
 };
+const deleteBrand = async (id) => {
+  try {
+    if (!id) {
+      return {
+        message: "Missing parameter",
+      };
+    }
+    const result = await brandModel.deleteBrand(id);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const brandService = {
   createNew,
   getAllBrand,
   findByAlphabet,
+  deleteBrand,
 };

@@ -10,7 +10,8 @@ Router.route("/")
     brandValidation.createNew,
     brandController.createNew
   )
-  .get(authMiddleware.isAuthorized, brandController.getAllBrand);
+  .get(authMiddleware.isAuthorized, brandController.getAllBrand)
+  .delete(authMiddleware.isAuthorized, brandController.deleteBrand);
 
 Router.route("/find").get(brandController.findByAlphabet);
 
