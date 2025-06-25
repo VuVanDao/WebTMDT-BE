@@ -5,7 +5,7 @@ import ApiError from "~/utils/ApiError";
 const createNew = async (req, res, next) => {
   const correctCondition = Joi.object({
     brandName: Joi.string().required(),
-    shopOwnerBrand: Joi.string().required(),
+    shopOwnerBrand: Joi.string(),
     brandImage: Joi.string().required(),
   });
   try {

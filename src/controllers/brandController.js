@@ -4,7 +4,7 @@ import { brandService } from "~/services/brandsService";
 const createNew = async (req, res, next) => {
   try {
     const { brandName, shopOwnerBrand, brandImage } = req.body;
-    if (!brandName || !shopOwnerBrand || !brandImage) {
+    if (!brandName || !brandImage) {
       res.status(StatusCodes.BAD_REQUEST).json({
         message: "Missing parameter",
       });
@@ -15,6 +15,15 @@ const createNew = async (req, res, next) => {
     next(error);
   }
 };
+const getAllBrand = async (req, res, next) => {
+  try {
+    const result = await brandService.getAllBrand();
+    res.status(StatusCodes.OK).json(result ?? []);
+  } catch (error) {
+    next(error);
+  }
+};
 export const brandController = {
   createNew,
+  getAllBrand,
 };

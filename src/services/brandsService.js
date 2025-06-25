@@ -3,7 +3,7 @@ import { brandModel } from "~/models/brandsModel";
 const createNew = async (brandData) => {
   try {
     const { brandName, shopOwnerBrand, brandImage } = brandData;
-    if (!brandName || !shopOwnerBrand || !brandImage) {
+    if (!brandName || !brandImage) {
       return {
         message: "Missing parameter",
       };
@@ -14,6 +14,16 @@ const createNew = async (brandData) => {
     throw error;
   }
 };
+
+const getAllBrand = async () => {
+  try {
+    const Brands = await brandModel.getAllBrand();
+    return Brands ?? [];
+  } catch (error) {
+    throw error;
+  }
+};
 export const brandService = {
   createNew,
+  getAllBrand,
 };

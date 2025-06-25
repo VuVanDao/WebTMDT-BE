@@ -4,10 +4,12 @@ import { authMiddleware } from "~/middlewares/authMiddlware";
 import { brandValidation } from "~/validations/brandValidation";
 
 const Router = express.Router();
-Router.route("/").post(
-  authMiddleware.isAuthorized,
-  brandValidation.createNew,
-  brandController.createNew
-);
+Router.route("/")
+  .post(
+    authMiddleware.isAuthorized,
+    brandValidation.createNew,
+    brandController.createNew
+  )
+  .get(authMiddleware.isAuthorized, brandController.getAllBrand);
 
 export const brandRouters = Router;

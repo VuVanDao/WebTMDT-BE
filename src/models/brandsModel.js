@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 const BRAND_COLLECTION_NAME = "brand";
 const BRAND_COLLECTION_SCHEMA = Joi.object({
   brandName: Joi.string().required(),
-  shopOwnerBrand: Joi.required(),
+  shopOwnerBrand: Joi.string(),
   brandImage: Joi.string().required(),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
@@ -43,7 +43,10 @@ const findOneById = async (id) => {
 
 const getAllBrand = async () => {
   try {
-    const brands = await GET_DB().collection(BRAND_COLLECTION_NAME).find();
+    const brands = await GET_DB()
+      .collection(BRAND_COLLECTION_NAME)
+      .find({})
+      .toArray();
     return brands;
   } catch (error) {
     throw new Error(error);
@@ -82,4 +85,5 @@ export const brandModel = {
   update,
   deleteOrder,
   findOneById,
+  getAllBrand,
 };
