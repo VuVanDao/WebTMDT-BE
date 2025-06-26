@@ -66,12 +66,13 @@ const update = async (data, id) => {
       { ...data, updatedAt: Date.now() },
       id
     );
-    if (result) {
+    if (data.shopOwnerBrand?.length > 0 && result) {
       await shopModel.updateShop(data?.shopOwnerBrand[0]?.id, {
         shopBrand: result?._id,
         updatedAt: Date.now(),
       });
     }
+
     return result;
   } catch (error) {
     throw error;
