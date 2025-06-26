@@ -1,6 +1,5 @@
 import Joi from "joi";
 import { GET_DB } from "~/config/mongodb";
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/constants";
 
 import { ObjectId } from "mongodb";
 
@@ -9,6 +8,7 @@ const BRAND_COLLECTION_SCHEMA = Joi.object({
   brandName: Joi.string().required(),
   shopOwnerBrand: Joi.string(),
   brandImage: Joi.string().required(),
+  tags: Joi.array().default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
@@ -68,7 +68,6 @@ const update = async (data, brandId) => {
   }
 };
 const deleteBrand = async (brandId) => {
-  console.log("🚀 ~ deleteBrand ~ brandId:", brandId);
   try {
     const result = await GET_DB()
       .collection(BRAND_COLLECTION_NAME)

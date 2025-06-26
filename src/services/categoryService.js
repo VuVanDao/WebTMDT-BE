@@ -46,9 +46,28 @@ const deleteCategory = async (id) => {
     throw error;
   }
 };
+const findByAlphabet = async (id) => {
+  try {
+    let categories = [];
+    if (!id) {
+      return {
+        message: "Missing parameter",
+      };
+    }
+    if (id === "All") {
+      categories = await categoryModel.getAllCategory();
+    } else {
+      categories = await categoryModel.findByAlphabet(id);
+    }
+    return categories;
+  } catch (error) {
+    throw error;
+  }
+};
 export const categoryService = {
   createNewCategory,
   getAllCategory,
   searchCategory,
   deleteCategory,
+  findByAlphabet,
 };

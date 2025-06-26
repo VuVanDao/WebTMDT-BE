@@ -104,6 +104,23 @@ const deleteCategory = async (id) => {
     throw new Error(error);
   }
 };
+
+const findByAlphabet = async (id) => {
+  try {
+    const categories = await GET_DB()
+      .collection(CATEGORY_COLLECTION_NAME)
+      .find({
+        name: {
+          $regex: `^${id}`,
+          $options: "i", // 'i' để không phân biệt hoa thường
+        },
+      })
+      .toArray();
+    return categories;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const categoryModel = {
   CATEGORY_COLLECTION_NAME,
   CATEGORY_COLLECTION_SCHEMA,
@@ -112,4 +129,5 @@ export const categoryModel = {
   getAllCategory,
   searchCategory,
   deleteCategory,
+  findByAlphabet,
 };

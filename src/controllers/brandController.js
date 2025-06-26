@@ -40,7 +40,6 @@ const findByAlphabet = async (req, res, next) => {
 const deleteBrand = async (req, res, next) => {
   try {
     const id = req.query.id;
-    console.log("🚀 ~ deleteBrand ~ id:", id);
     if (!id) {
       res.status(StatusCodes.OK).json({
         message: "Missing parameter",

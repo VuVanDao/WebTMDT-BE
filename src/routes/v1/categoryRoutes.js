@@ -11,4 +11,5 @@ Router.route("/")
   .get(categoryController.getAllCategory)
   .delete(categoryController.deleteCategory);
 Router.route("/search").get(categoryController.searchCategory);
+Router.route("/findByAlphabet").get(categoryController.findByAlphabet);
 export const categoryRouters = Router;
