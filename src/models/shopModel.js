@@ -5,11 +5,10 @@ import {
   DELIVERY_TYPE,
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
-  OBJECT_ID_RULE,
-  OBJECT_ID_RULE_MESSAGE,
   PHONE_RULE,
   PHONE_RULE_MESSAGE,
   SHOP_STATUS_STATE,
+  SHOP_TYPE,
 } from "~/utils/constants";
 import { userModel } from "./userModel";
 import { productModel } from "./productModel";
@@ -36,8 +35,9 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
     SHOP_STATUS_STATE.PENDING
   ),
   ratingAverageVoted: Joi.number().default(0),
-  tagsProductShopSell: Joi.array()
-  .default([]),
+  tagsProductShopSell: Joi.array().default([]),
+  shopType: Joi.string().default(SHOP_TYPE.SHOPEE),
+  shopBrand: Joi.optional().default(""),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });

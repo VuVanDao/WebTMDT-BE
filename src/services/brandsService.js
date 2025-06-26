@@ -1,4 +1,5 @@
 import { brandModel } from "~/models/brandsModel";
+import { shopModel } from "~/models/shopModel";
 
 const createNew = async (brandData) => {
   try {
@@ -54,9 +55,32 @@ const deleteBrand = async (id) => {
     throw error;
   }
 };
+const update = async (data, id) => {
+  try {
+    if (!id) {
+      return {
+        message: "Missing parameter",
+      };
+    }
+    const result = await brandModel.update(
+      { ...data, updatedAt: Date.now() },
+      id
+    );
+    if (result) {
+      await shopModel.updateShop(data?.shopOwnerBrand[0]?.id, {
+        shopBrand: result?._id,
+        updatedAt: Date.now(),
+      });
+    }
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const brandService = {
   createNew,
   getAllBrand,
   findByAlphabet,
   deleteBrand,
+  update,
 };

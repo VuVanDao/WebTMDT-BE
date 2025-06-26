@@ -11,6 +11,7 @@ Router.route("/")
     brandController.createNew
   )
   .get(authMiddleware.isAuthorized, brandController.getAllBrand)
+  .put(authMiddleware.isAuthorized, brandController.update)
   .delete(authMiddleware.isAuthorized, brandController.deleteBrand);
 
 Router.route("/find").get(brandController.findByAlphabet);

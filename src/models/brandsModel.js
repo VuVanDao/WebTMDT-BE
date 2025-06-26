@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 const BRAND_COLLECTION_NAME = "brand";
 const BRAND_COLLECTION_SCHEMA = Joi.object({
   brandName: Joi.string().required(),
-  shopOwnerBrand: Joi.string(),
+  shopOwnerBrand: Joi.string().default({}),
   brandImage: Joi.string().required(),
   tags: Joi.array().default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),

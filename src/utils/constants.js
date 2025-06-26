@@ -49,3 +49,8 @@ export const USER_ROLES = {
   ADMIN: "admin",
   SHOP_OWNER: "shop_owner",
 };
+export const SHOP_TYPE = {
+  SHOPEE: "shopee",
+  SHOPEE_MALL: "shopee_mall",
+  SHOPPE_FOOD: "shopee_food",
+};

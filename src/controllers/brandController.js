@@ -51,9 +51,24 @@ const deleteBrand = async (req, res, next) => {
     next(error);
   }
 };
+const update = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    if (!id) {
+      res.status(StatusCodes.OK).json({
+        message: "Missing parameter",
+      });
+    }
+    const result = await brandService.update(req?.body, id);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const brandController = {
   createNew,
   getAllBrand,
   findByAlphabet,
   deleteBrand,
+  update,
 };
