@@ -14,6 +14,8 @@ Router.route("/")
   .put(authMiddleware.isAuthorized, brandController.update)
   .delete(authMiddleware.isAuthorized, brandController.deleteBrand);
 
-Router.route("/find").get(brandController.findByAlphabet);
+Router.route("/find")
+  .get(brandController.findByAlphabet)
+  .post(brandController.findBrand);
 
 export const brandRouters = Router;

@@ -93,6 +93,17 @@ const findByAlphabet = async (id) => {
     throw new Error(error);
   }
 };
+const findBrand = async (condition) => {
+  try {
+    const result = await GET_DB()
+      .collection(BRAND_COLLECTION_NAME)
+      .find(condition)
+      .toArray();
+    return result || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 export const brandModel = {
   BRAND_COLLECTION_NAME,
   BRAND_COLLECTION_SCHEMA,
@@ -102,4 +113,5 @@ export const brandModel = {
   findOneById,
   getAllBrand,
   findByAlphabet,
+  findBrand,
 };

@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "mongodb";
+import { brandModel } from "~/models/brandsModel";
 import { shopModel } from "~/models/shopModel";
 import { userModel } from "~/models/userModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
@@ -62,6 +63,13 @@ const registerLogo = async (logoFile, id) => {
 const getDetailShop = async (id) => {
   try {
     const detailShop = await shopModel.getDetailShop(id);
+    if (detailShop[0].shopBrand) {
+      const res = await brandModel.findOneById(detailShop[0].shopBrand);
+      if (res) {
+        detailShop[0].shopBrand = res;
+        return detailShop;
+      }
+    }
     return detailShop;
   } catch (error) {
     throw error;

@@ -78,10 +78,27 @@ const update = async (data, id) => {
     throw error;
   }
 };
+const findBrand = async (findBrand) => {
+  try {
+    let result = [];
+    let condition = [];
+    if (findBrand?.tags) {
+      condition.push({ tags: { $in: [findBrand?.tags] } });
+    }
+    result = await brandModel.findBrand({
+      $and: [...condition],
+    });
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const brandService = {
   createNew,
   getAllBrand,
   findByAlphabet,
   deleteBrand,
   update,
+  findBrand,
 };

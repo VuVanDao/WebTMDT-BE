@@ -65,10 +65,25 @@ const update = async (req, res, next) => {
     next(error);
   }
 };
+const findBrand = async (req, res, next) => {
+  try {
+    const { data } = req.body;
+    if (!data) {
+      res.status(StatusCodes.OK).json({
+        message: "Missing parameter",
+      });
+    }
+    const result = await brandService.findBrand(data);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const brandController = {
   createNew,
   getAllBrand,
   findByAlphabet,
   deleteBrand,
   update,
+  findBrand,
 };
