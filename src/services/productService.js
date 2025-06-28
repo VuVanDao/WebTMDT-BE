@@ -112,13 +112,16 @@ const update = async (productId, reqBody, productImage) => {
             : [{ ...reqBody?.commentToAdd, commentAt: Date.now() }],
         ratingAverage: targetProduct[0].ratingAverage,
       });
-    } else if (reqBody?.newQuantity) {
+    } else if (reqBody?.categoryId) {
+      let totalQuantity = 0;
+      reqBody?.categoryId?.map((item) => {
+        totalQuantity += item?.quantity;
+      });
       let newData = {
         ...reqBody,
-        quantity: +existsProduct?.quantity - reqBody?.newQuantity,
-        sold: +existsProduct?.sold + +reqBody?.newQuantity,
+        quantity: totalQuantity,
       };
-      delete newData?.newQuantity;
+
       updatedProduct = await productModel.update(productId, newData);
     } else {
       //th3:change other fields

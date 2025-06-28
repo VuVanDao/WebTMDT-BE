@@ -7,7 +7,6 @@ const createNew = async (req, res, next) => {
     name: Joi.string().required().trim().min(2),
     description: Joi.string().required().trim().min(3),
     price: Joi.number().required(),
-    quantity: Joi.string().required(),
     tagsId: Joi.array().min(1).required(),
     shopId: Joi.string().required(),
   });
