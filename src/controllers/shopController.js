@@ -42,6 +42,23 @@ const getDetailShop = async (req, res, next) => {
     next(error);
   }
 };
+const getDetailShopByOwnerId = async (req, res, next) => {
+  try {
+    const ownerId = req.query.id;
+    if (!ownerId) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Missing parameter (id)" });
+    }
+    const detailShop = await shopService.getDetailShopByOwnerId(ownerId);
+    if (!detailShop) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Not found" });
+    }
+    res.status(StatusCodes.OK).json(detailShop);
+  } catch (error) {
+    next(error);
+  }
+};
 const browseShop = async (req, res, next) => {
   try {
     const shopId = req.body.shopId;
@@ -105,4 +122,5 @@ export const shopController = {
   updateShop,
   getAllShop,
   deleteShop,
+  getDetailShopByOwnerId,
 };

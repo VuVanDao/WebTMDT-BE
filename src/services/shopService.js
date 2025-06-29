@@ -30,6 +30,9 @@ const register = async (reqBody) => {
       description,
     };
     const registeredShop = await shopModel.register(newShop);
+    await userModel.update(ownerId, {
+      sentForm: true,
+    });
 
     return registeredShop;
   } catch (error) {
@@ -63,13 +66,21 @@ const registerLogo = async (logoFile, id) => {
 const getDetailShop = async (id) => {
   try {
     const detailShop = await shopModel.getDetailShop(id);
-    if (detailShop[0].shopBrand) {
+    if (detailShop && detailShop[0]?.shopBrand) {
       const res = await brandModel.findOneById(detailShop[0].shopBrand);
       if (res) {
         detailShop[0].shopBrand = res;
         return detailShop;
       }
     }
+    return detailShop;
+  } catch (error) {
+    throw error;
+  }
+};
+const getDetailShopByOwnerId = async (id) => {
+  try {
+    const detailShop = await shopModel.getDetailShopByOwnerId(id);
     return detailShop;
   } catch (error) {
     throw error;
@@ -137,4 +148,5 @@ export const shopService = {
   updateShop,
   getAllShop,
   deleteShop,
+  getDetailShopByOwnerId,
 };

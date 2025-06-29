@@ -19,6 +19,9 @@ Router.route("/browseShop").post(
   shopController.browseShop
 );
 Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
+Router.route("/get_detail_shop_by_owner").get(
+  shopController.getDetailShopByOwnerId
+);
 Router.route("/")
   .put(
     authMiddleware.isAuthorized,

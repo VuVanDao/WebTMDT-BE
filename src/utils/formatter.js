@@ -13,6 +13,7 @@ export const pickUser = (user) => {
     "phoneNumber",
     "cartItem",
     "address",
+    "sentForm",
     // "createdAt",
     // "updatedAt",
   ]);
