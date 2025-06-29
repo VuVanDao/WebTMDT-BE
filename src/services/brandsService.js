@@ -24,18 +24,28 @@ const getAllBrand = async () => {
     throw error;
   }
 };
-const findByAlphabet = async (id) => {
+const queryBrand = async (id, dataQuery) => {
   try {
     let Brands = [];
-    if (!id) {
-      return {
-        message: "Missing parameter",
-      };
-    }
-    if (id === "All") {
+    let condition = [];
+
+    if ((id && id === "All") || (!id && !dataQuery)) {
       Brands = await brandModel.getAllBrand();
     } else {
-      Brands = await brandModel.findByAlphabet(id);
+      if (id) {
+        condition.push({
+          brandName: {
+            $regex: `^${id}`,
+            $options: "i", // 'i' để không phân biệt hoa thường
+          },
+        });
+      }
+      if (dataQuery.length > 0) {
+        condition.push({ tags: { $in: dataQuery } });
+      }
+      Brands = await brandModel.queryBrand({
+        $and: condition,
+      });
     }
     return Brands ?? [];
   } catch (error) {
@@ -97,7 +107,7 @@ const findBrand = async (findBrand) => {
 export const brandService = {
   createNew,
   getAllBrand,
-  findByAlphabet,
+  queryBrand,
   deleteBrand,
   update,
   findBrand,

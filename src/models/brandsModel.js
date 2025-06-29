@@ -77,16 +77,11 @@ const deleteBrand = async (brandId) => {
     throw new Error(error);
   }
 };
-const findByAlphabet = async (id) => {
+const queryBrand = async (condition) => {
   try {
     const brands = await GET_DB()
       .collection(BRAND_COLLECTION_NAME)
-      .find({
-        brandName: {
-          $regex: `^${id}`,
-          $options: "i", // 'i' để không phân biệt hoa thường
-        },
-      })
+      .find(condition)
       .toArray();
     return brands;
   } catch (error) {
@@ -112,6 +107,6 @@ export const brandModel = {
   deleteBrand,
   findOneById,
   getAllBrand,
-  findByAlphabet,
+  queryBrand,
   findBrand,
 };

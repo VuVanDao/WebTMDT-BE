@@ -23,15 +23,15 @@ const getAllBrand = async (req, res, next) => {
     next(error);
   }
 };
-const findByAlphabet = async (req, res, next) => {
+const queryBrand = async (req, res, next) => {
   try {
     const id = req.query.id;
-    if (!id) {
-      res.status(StatusCodes.OK).json({
-        message: "Missing parameter",
-      });
-    }
-    const result = await brandService.findByAlphabet(id);
+    const dataQuery = req?.query?.dataQuery;
+
+    const result = await brandService.queryBrand(
+      id,
+      dataQuery ? dataQuery.split(",") : ""
+    );
     res.status(StatusCodes.OK).json(result ?? []);
   } catch (error) {
     next(error);
@@ -82,7 +82,7 @@ const findBrand = async (req, res, next) => {
 export const brandController = {
   createNew,
   getAllBrand,
-  findByAlphabet,
+  queryBrand,
   deleteBrand,
   update,
   findBrand,
