@@ -15,7 +15,7 @@ const ORDER_COLLECTION_NAME = "order";
 const ORDER_COLLECTION_SCHEMA = Joi.object({
   customerId: Joi.required(),
   name: Joi.string().required(),
-  category: Joi.string().required(),
+  category: Joi.string().optional().default(null),
   quantity: Joi.number().required(),
   price: Joi.number().required(),
   size: Joi.optional().default(null),
