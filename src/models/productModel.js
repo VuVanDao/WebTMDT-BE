@@ -15,7 +15,7 @@ const PRODUCT_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().trim().min(3),
   price: Joi.number().required(),
   discount: Joi.optional().default(null),
-  quantity: Joi.string().required(),
+  quantity: Joi.string(),
   image: Joi.array().items().default([]),
   shopId: Joi.required(),
   sold: Joi.number().default(0),
@@ -129,14 +129,20 @@ const GetAllProduct = async (id) => {
         ])
         .toArray();
     } else {
-      const queryCondition = [
-        {
-          shopId: new ObjectId(id),
-        },
-      ];
       result = await GET_DB()
         .collection(PRODUCT_COLLECTION_NAME)
-        .aggregate([])
+        .aggregate([
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+          {
+            $match: {
+              $expr: { $gt: [{ $size: "$categoryId" }, 0] },
+            },
+          },
+        ])
         .toArray();
     }
 
