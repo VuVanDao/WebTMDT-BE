@@ -120,6 +120,25 @@ const browseShop = async (shopId, selection) => {
     throw error;
   }
 };
+const cancelRegisterShop = async (shopId) => {
+  try {
+    const findShop = await shopModel.getDetailShop(shopId);
+    if (!findShop) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Your shop is not exist");
+    }
+    if (findShop[0].status === SHOP_STATUS_STATE.ACCEPT) {
+      throw new ApiError(
+        StatusCodes.NOT_ACCEPTABLE,
+        "Your shop is already accepted"
+      );
+    }
+    const shopBrowsed = await shopModel.deleteShop(shopId);
+
+    return shopBrowsed;
+  } catch (error) {
+    throw error;
+  }
+};
 const verifyShop = async (reqBody) => {
   try {
     const existsShop = await shopModel.getDetailShop(reqBody.id);
@@ -187,4 +206,5 @@ export const shopService = {
   deleteShop,
   getDetailShopByOwnerId,
   verifyShop,
+  cancelRegisterShop,
 };

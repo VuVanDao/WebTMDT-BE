@@ -88,6 +88,17 @@ const verifyShop = async (req, res, next) => {
     next(error);
   }
 };
+const cancelRegisterShop = async (req, res, next) => {
+  try {
+    const shopBrowsed = await shopService.cancelRegisterShop(req.query.id);
+    if (!shopBrowsed) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Not found" });
+    }
+    res.status(StatusCodes.OK).json(shopBrowsed);
+  } catch (error) {
+    next(error);
+  }
+};
 const updateShop = async (req, res, next) => {
   try {
     const shopId = req.jwtDecoded.shopId;
@@ -135,4 +146,5 @@ export const shopController = {
   deleteShop,
   getDetailShopByOwnerId,
   verifyShop,
+  cancelRegisterShop,
 };

@@ -18,7 +18,9 @@ Router.route("/browseShop").post(
   authMiddleware.isAuthorized,
   shopController.browseShop
 );
-Router.route("/verifyShop").post(shopController.verifyShop);
+Router.route("/verifyShop")
+  .post(shopController.verifyShop)
+  .delete(shopController.cancelRegisterShop);
 Router.route("/get_detail_shop/:id").get(shopController.getDetailShop);
 Router.route("/get_detail_shop_by_owner").get(
   shopController.getDetailShopByOwnerId
