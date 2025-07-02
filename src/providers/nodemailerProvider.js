@@ -21,8 +21,7 @@ const transporter = nodemailer.createTransport({
     pass: "zeyi qrvv fxdn stlv", // Với Gmail, bạn cần dùng "App password"
   },
 });
-const sendEmail = (receiverEmail, verifyToken) => {
-  const verificationLink = `${env.WEBSITE_DOMAIN_DEVELOPMENT}/account/verification?email=${receiverEmail}&token=${verifyToken}`;
+const sendEmail = (receiverEmail, verificationLink) => {
   const mailOptions = {
     from: "dao28905@gmail.com",
     to: receiverEmail,

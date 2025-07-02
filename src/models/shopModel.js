@@ -38,6 +38,7 @@ const SHOP_OWNER_COLLECTION_SCHEMA = Joi.object({
   tagsProductShopSell: Joi.array().default([]),
   shopType: Joi.string().default(SHOP_TYPE.SHOPEE),
   shopBrand: Joi.optional().default(""),
+  verifyShopToken: Joi.string().default(""),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });

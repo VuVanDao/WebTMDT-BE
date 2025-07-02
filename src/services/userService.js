@@ -62,15 +62,8 @@ const register = async (reqBody) => {
     const createdUser = await userModel.register(newUser);
     const getUser = await userModel.findOneByID(createdUser.insertedId);
     const verificationLink = `${env.WEBSITE_DOMAIN_DEVELOPMENT}/account/verification?email=${getUser.email}&token=${getUser.verifyToken}`;
-    const customSubject = "plz verify your email before using our services";
-    const htmlContent = `
-    <h3>Here is your verification link</h3>
-    <h3>${verificationLink}</h3> 
-    <h3>From Admin: Van Dao</h3>
-    `;
 
-    // await BrevoProvider.sendEmail(getUser.email, customSubject, htmlContent);
-    nodemailerProvider.sendEmail(getUser.email, getUser.verifyToken);
+    nodemailerProvider.sendEmail(getUser.email, verificationLink);
 
     return pickUser(getUser);
   } catch (error) {

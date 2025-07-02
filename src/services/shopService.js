@@ -5,6 +5,10 @@ import { shopModel } from "~/models/shopModel";
 import { userModel } from "~/models/userModel";
 import { cloudinaryProvider } from "~/providers/cloudinaryProvider";
 import { SHOP_STATUS_STATE, USER_ROLES } from "~/utils/constants";
+import { v4 as uuidv4 } from "uuid";
+import { nodemailerProvider } from "~/providers/nodemailerProvider";
+import { env } from "~/config/environment";
+import ApiError from "~/utils/ApiError";
 
 const register = async (reqBody) => {
   try {
@@ -28,6 +32,7 @@ const register = async (reqBody) => {
       logo,
       ownerId: newOwnerId,
       description,
+      verifyShopToken: uuidv4(),
     };
     const registeredShop = await shopModel.register(newShop);
     await userModel.update(ownerId, {
@@ -88,6 +93,17 @@ const getDetailShopByOwnerId = async (id) => {
 };
 const browseShop = async (shopId, selection) => {
   try {
+    const findShop = await shopModel.getDetailShop(shopId);
+    if (!findShop) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Your shop is not exist");
+    }
+    if (findShop[0].status === SHOP_STATUS_STATE.ACCEPT) {
+      throw new ApiError(
+        StatusCodes.NOT_ACCEPTABLE,
+        "Your shop is already verified"
+      );
+    }
+
     const dataSelection = {
       status:
         selection === "accept"
@@ -95,11 +111,32 @@ const browseShop = async (shopId, selection) => {
           : SHOP_STATUS_STATE.DENIED,
     };
     const shopBrowsed = await shopModel.browseShop(shopId, dataSelection);
-    if (selection === "accept") {
-      await userModel.update(shopBrowsed?.ownerId, {
-        role: USER_ROLES.SHOP_OWNER,
-      });
+
+    const verificationLink = `${env.WEBSITE_DOMAIN_DEVELOPMENT}/account/upgradeToShopOwner?id=${shopBrowsed._id}&token=${shopBrowsed.verifyShopToken}`;
+    nodemailerProvider.sendEmail(shopBrowsed.email, verificationLink);
+
+    return shopBrowsed;
+  } catch (error) {
+    throw error;
+  }
+};
+const verifyShop = async (reqBody) => {
+  try {
+    const existsShop = await shopModel.getDetailShop(reqBody.id);
+    if (!existsShop) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Your shop is not exist");
     }
+    if (reqBody.token !== existsShop[0].verifyShopToken) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, "Token is invalid");
+    }
+    const updateData = {
+      verifyShopToken: null,
+    };
+    const shopBrowsed = await shopModel.updateShop(reqBody.id, updateData);
+    await userModel.update(existsShop[0]?.ownerId, {
+      role: USER_ROLES.SHOP_OWNER,
+    });
+
     return shopBrowsed;
   } catch (error) {
     throw error;
@@ -149,4 +186,5 @@ export const shopService = {
   getAllShop,
   deleteShop,
   getDetailShopByOwnerId,
+  verifyShop,
 };

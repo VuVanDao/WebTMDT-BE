@@ -28,7 +28,7 @@ const USER_COLLECTION_SCHEMA = Joi.object({
     .default(""),
   role: Joi.string()
     .valid(...Object.values(USER_ROLES))
-    .default(USER_ROLES.ADMIN),
+    .default(USER_ROLES.CUSTOMER),
   address: Joi.string().default(""),
   isActive: Joi.boolean().default(false),
   online: Joi.boolean().default(false),
