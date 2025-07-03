@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { orderModel } from "~/models/orderModel";
 import { productModel } from "~/models/productModel";
+import { VnpayProvider } from "~/providers/VnpayProvider";
 import { ORDER_INVITATION_STATUS } from "~/utils/constants";
 
 const createNew = async (orderData) => {
@@ -15,7 +16,8 @@ const createNew = async (orderData) => {
       productId: newProductId,
       customerId: newCustomerId,
     });
-    return orderResult;
+    const result = await findOneById(orderResult?.insertedId);
+    return result;
   } catch (error) {
     throw error;
   }
@@ -152,6 +154,26 @@ const getOrderByAdmin = async () => {
     throw error;
   }
 };
+const checkout = async (reqBody) => {
+  try {
+    const res = await VnpayProvider.handleCheckout(
+      reqBody.price,
+      reqBody.orderId
+    );
+    // const AllOrder = await orderModel.getOrderByAdmin();
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+const findOneById = async (id) => {
+  try {
+    const result = await orderModel.findOneById(id);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
 export const orderService = {
   createNew,
   getAllOrder,
@@ -159,4 +181,6 @@ export const orderService = {
   update,
   deleteOrder,
   getOrderByAdmin,
+  checkout,
+  findOneById,
 };

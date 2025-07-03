@@ -23,4 +23,9 @@ export const env = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN,
   GOOGLE_ACCESS_TOKEN: process.env.GOOGLE_ACCESS_TOKEN,
+
+  tmnCode: process.env.tmnCode,
+  secureSecret: process.env.secureSecret,
+  vnpayHost: process.env.vnpayHost,
+  vnp_IpAddr: process.env.vnp_IpAddr,
 };

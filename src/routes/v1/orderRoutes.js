@@ -25,4 +25,7 @@ Router.route("/get_orders_by_admin").get(
   authMiddleware.isAuthorized,
   orderController.getOrderByAdmin
 );
+Router.route("/checkout")
+  .post(authMiddleware.isAuthorized, orderController.checkout)
+  .get(authMiddleware.isAuthorized, orderController.findOneById);
 export const orderRouters = Router;

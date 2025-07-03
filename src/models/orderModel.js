@@ -38,6 +38,7 @@ const ORDER_COLLECTION_SCHEMA = Joi.object({
       commentAt: Joi.date().timestamp(),
     })
     .default([]),
+  checkoutComplete: Joi.boolean().default(false),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
   updatedAt: Joi.date().timestamp("javascript").default(null),
 });
@@ -76,6 +77,7 @@ const getAllOrder = async (statusOrder, customerId) => {
       const queryCondition = [
         {
           customerId: customerId,
+          checkoutComplete: true,
         },
       ];
       const newOrder = await GET_DB()
@@ -119,6 +121,7 @@ const getAllOrder = async (statusOrder, customerId) => {
         {
           status: statusOrder,
           customerId: customerId,
+          checkoutComplete: true,
         },
       ];
       const newOrder = await GET_DB()
@@ -167,6 +170,7 @@ const getOrderByShopId = async (shopId) => {
     const queryCondition = [
       {
         shopId: new ObjectId(shopId),
+        checkoutComplete: true,
       },
     ];
     const listOrders = await GET_DB()
@@ -238,6 +242,11 @@ const getOrderByAdmin = async () => {
     const AllOrder = await GET_DB()
       .collection(ORDER_COLLECTION_NAME)
       .aggregate([
+        {
+          $match: {
+            checkoutComplete: true,
+          },
+        },
         {
           $lookup: {
             from: shopModel.SHOP_OWNER_COLLECTION_NAME,

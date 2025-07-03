@@ -78,6 +78,23 @@ const getOrderByAdmin = async (req, res, next) => {
     next(error);
   }
 };
+const checkout = async (req, res, next) => {
+  try {
+    const result = await orderService.checkout(req.body);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+const findOneById = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const result = await orderService.findOneById(id);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const orderController = {
   createNew,
   getAllOrder,
@@ -85,4 +102,6 @@ export const orderController = {
   update,
   deleteOrder,
   getOrderByAdmin,
+  checkout,
+  findOneById,
 };
