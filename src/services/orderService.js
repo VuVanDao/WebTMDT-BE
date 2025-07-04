@@ -9,13 +9,46 @@ const createNew = async (orderData) => {
     const { productId, customerId, shopId } = orderData;
     let newProductId = new ObjectId(productId);
     let newCustomerId = new ObjectId(customerId);
-    const shopIdOwnerProduct = await productModel.findOneById(productId);
-    const orderResult = await orderModel.createNew({
-      ...orderData,
-      shopId: new ObjectId(shopId),
-      productId: newProductId,
-      customerId: newCustomerId,
+
+    //tim product
+    const targetProduct = await productModel.findOneById(productId);
+
+    //tim category cua product duoc mua
+    const targetCategoryChange = targetProduct[0]?.categoryId?.find((item) => {
+      return item.name === orderData.category;
     });
+    if (targetCategoryChange.quantity === 0) {
+      return {
+        message: "Mặt hàng này đã hết",
+      };
+    }
+    //tinh lai so luong của category duoc mua
+    targetCategoryChange.quantity -= orderData?.quantity;
+
+    targetProduct[0].categoryId = targetProduct[0]?.categoryId?.filter(
+      (item) => item?.name !== orderData.category
+    );
+
+    targetProduct[0].categoryId.push(targetCategoryChange);
+
+    let updateQuantityCategoryProduct = await productModel.update(
+      orderData?.productId,
+      {
+        categoryId: targetProduct[0]?.categoryId,
+        updatedAt: Date.now(),
+      }
+    );
+    let orderResult = "";
+    //tao order
+    if (updateQuantityCategoryProduct) {
+      orderResult = await orderModel.createNew({
+        ...orderData,
+        shopId: new ObjectId(shopId),
+        productId: newProductId,
+        customerId: newCustomerId,
+      });
+    }
+
     const result = await findOneById(orderResult?.insertedId);
     return result;
   } catch (error) {
@@ -95,7 +128,7 @@ const update = async (data, orderId) => {
           }
         );
         if (updateQuantityProduct)
-          //cap nhat order
+          //cap nhat status order
           ordersResult = await orderModel.update(
             { ...data, updatedAt: Date.now() },
             orderId

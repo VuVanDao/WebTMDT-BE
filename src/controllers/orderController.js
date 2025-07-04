@@ -50,7 +50,11 @@ const update = async (req, res, next) => {
     const data = req.body;
     const orderId = req.params.orderId;
     const result = await orderService.update(data, orderId);
-    res.status(StatusCodes.OK).json(result);
+    if (!result.message) {
+      res.status(StatusCodes.OK).json(result);
+    } else {
+      res.status(StatusCodes.CONFLICT).json(result);
+    }
   } catch (error) {
     next(error);
   }
