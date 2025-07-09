@@ -77,7 +77,7 @@ const getAllOrder = async (statusOrder, customerId) => {
       const queryCondition = [
         {
           customerId: customerId,
-          checkoutComplete: true,
+          // checkoutComplete: true,
         },
       ];
       const newOrder = await GET_DB()
@@ -121,7 +121,7 @@ const getAllOrder = async (statusOrder, customerId) => {
         {
           status: statusOrder,
           customerId: customerId,
-          checkoutComplete: true,
+          // checkoutComplete: true,
         },
       ];
       const newOrder = await GET_DB()
@@ -170,7 +170,7 @@ const getOrderByShopId = async (shopId) => {
     const queryCondition = [
       {
         shopId: new ObjectId(shopId),
-        checkoutComplete: true,
+        // checkoutComplete: true,
       },
     ];
     const listOrders = await GET_DB()
@@ -242,11 +242,11 @@ const getOrderByAdmin = async () => {
     const AllOrder = await GET_DB()
       .collection(ORDER_COLLECTION_NAME)
       .aggregate([
-        {
-          $match: {
-            checkoutComplete: true,
-          },
-        },
+        // {
+        //   $match: {
+        //      checkoutComplete: true,
+        //   },
+        // },
         {
           $lookup: {
             from: shopModel.SHOP_OWNER_COLLECTION_NAME,

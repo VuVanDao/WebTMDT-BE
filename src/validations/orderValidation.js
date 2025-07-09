@@ -9,7 +9,6 @@ const createNew = async (req, res, next) => {
     price: Joi.number().required(),
     quantity: Joi.number().required(),
     customerInfo: Joi.object().required(),
-    category: Joi.string().required(),
   });
   try {
     await correctCondition.validateAsync(req.body, {
